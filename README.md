@@ -19,30 +19,40 @@ brand/           the logo as supplied, untouched
 
 ## Deploy
 
-Cloudflare Pages, direct upload:
+Cloudflare **Workers** (Static Assets), not Pages:
 
 ```bash
-npx wrangler pages deploy public --project-name=brightlabsvaughan
+npx wrangler deploy
 ```
 
-Production is `brightlabsvaughan.com`; every deploy also gets its own
-`*.brightlabsvaughan.pages.dev` preview URL.
+That is the whole deploy. `public/` is uploaded and served directly; there is no
+`main`, because an assets-only Worker needs no script.
 
-### The custom domain needs two DNS records added by hand
+### Why Workers and not Pages
 
-Both custom domains are attached to the Pages project and sit at `pending`
-until the zone points at it. Wrangler's OAuth token carries `pages:write` and
-`zone:read` and **no DNS write scope at all**, so neither wrangler nor the API
-can create these — and no amount of `wrangler login` fixes it, because DNS write
-is not among the scopes wrangler asks for. They have to come from the dashboard:
+DNS, not preference. Pages custom domains attached over the API do **not** create
+their own DNS record — they sit at `status: pending` until something writes the
+CNAME, and the wrangler OAuth token here carries `zone:read` with no DNS write
+scope at all. `wrangler login` cannot fix that: DNS write is not among the scopes
+wrangler asks for, and wrangler 4.x has no `pages domain` command either.
 
-| Type  | Name  | Target                        | Proxy |
-|-------|-------|-------------------------------|-------|
-| CNAME | `@`   | `brightlabsvaughan.pages.dev` | on    |
-| CNAME | `www` | `brightlabsvaughan.pages.dev` | on    |
+A **Workers** custom domain is provisioned by the Workers service itself under
+`workers_routes:write`, which the token does have. So `routes` with
+`custom_domain: true` creates the DNS record and orders the certificate on its
+own, with nothing to do in the dashboard. Both hostnames came up that way.
 
-Adding the custom domain from **Pages → the project → Custom domains** creates
-them for you; doing it over the API, as here, does not.
+### If the domain looks dead from this Mac
+
+Check with `--resolve` before believing it:
+
+```bash
+curl -sI --resolve brightlabsvaughan.com:443:172.64.80.1 https://brightlabsvaughan.com
+```
+
+macOS caches the NXDOMAIN from every lookup made before the record existed, so
+the site can be serving 200 worldwide while `curl` on this machine still says
+"Could not resolve host". `sudo dscacheutil -flushcache; sudo killall -HUP
+mDNSResponder` clears it.
 
 ## The style
 
