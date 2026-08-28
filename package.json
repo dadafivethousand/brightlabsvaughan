@@ -1,0 +1,12 @@
+{
+  "name": "brightlabsvaughan",
+  "private": true,
+  "description": "brightlabsvaughan.com — static site on Cloudflare Workers",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.127.1"
+  }
+}

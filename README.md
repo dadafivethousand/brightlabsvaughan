@@ -22,8 +22,14 @@ brand/           the logo as supplied, untouched
 Cloudflare **Workers** (Static Assets), not Pages:
 
 ```bash
-npx wrangler deploy
+npm install        # once, on a new machine
+npm run deploy
+npm run dev        # local preview at 127.0.0.1:8787
 ```
+
+`wrangler` is the only dependency and it is pinned in `package.json`, so a fresh
+clone needs nothing else installed to ship. You will be asked to
+`wrangler login` once per machine.
 
 That is the whole deploy. `public/` is uploaded and served directly; there is no
 `main`, because an assets-only Worker needs no script.
@@ -79,5 +85,8 @@ be rewritten without asking. Section copy elsewhere is house wording built from
 it. **No prices, ages, schedules, addresses or phone numbers appear anywhere on
 the site, because none were supplied** — do not invent them to fill a gap.
 
-`hello@brightlabsvaughan.com` needs a Cloudflare Email Routing rule pointing at
-a real inbox before it will actually receive anything.
+The contact address is `brightlabsvaughan@gmail.com` — a real inbox, so it works
+with no mail configuration on the domain at all. If it is ever moved to
+`something@brightlabsvaughan.com`, that address needs a Cloudflare Email Routing
+rule forwarding to a real mailbox first, or the site will be advertising a
+mailbox nobody reads.
