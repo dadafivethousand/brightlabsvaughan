@@ -1,0 +1,444 @@
+/* Bright Labs Vaughan
+ *
+ * The logo is hand-drawn — a marker-weight bulb with sketchy rays and marker
+ * lettering — so nothing here is allowed to be perfectly straight or perfectly
+ * centred. Three rules carry the style:
+ *
+ *   1. Boxes are drawn, not rendered. Every panel uses the asymmetric
+ *      border-radius trick so its four corners disagree with each other the way
+ *      a pen's would, and sits on a hard offset shadow rather than a blur —
+ *      that offset is the second pass of a sketch, not a light source.
+ *   2. Nothing sits square. Cards, notes and the mark are all a degree or two
+ *      off, and they alternate direction so the page reads as pinned up rather
+ *      than laid out.
+ *   3. The page is a lab notebook. Cream stock, faint graph rule, and the
+ *      bulb's own rays scattered behind the content at low contrast.
+ */
+
+:root {
+  --yellow: #f6b93b;
+  --yellow-soft: #fcd980;
+  --orange: #ee8a3c;
+  --ink: #22201d;
+  --ink-soft: #55504a;
+  --paper: #fffcf3;
+  --paper-2: #fff7e6;
+  --rule: rgba(34, 32, 29, 0.055);
+
+  --draw: 3px;
+  --marker: "Permanent Marker", "Caveat", system-ui, sans-serif;
+  --hand: "Caveat", cursive;
+  --body: "Nunito", ui-rounded, system-ui, -apple-system, sans-serif;
+
+  /* one pen stroke, four corners that disagree */
+  --box: 22px 40px 26px 36px / 34px 24px 38px 26px;
+  --box-alt: 38px 22px 40px 24px / 24px 36px 22px 40px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--body);
+  font-size: 18px;
+  line-height: 1.65;
+  color: var(--ink);
+  background-color: var(--paper);
+  /* graph rule — a lab notebook, not a web page */
+  background-image:
+    linear-gradient(var(--rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+  background-size: 30px 30px;
+  overflow-x: hidden;
+}
+
+img { max-width: 100%; display: block; }
+
+/* ---------- wallpaper doodles ---------- */
+
+.doodles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  color: var(--yellow);
+}
+
+.doodle { position: absolute; opacity: 0.3; }
+.doodle--a { top: 12vh; left: 4vw; width: 74px; transform: rotate(-12deg); }
+.doodle--b { top: 52vh; right: 3vw; width: 108px; opacity: 0.16; color: var(--ink); transform: rotate(9deg); }
+.doodle--c { bottom: 8vh; left: 7vw; width: 84px; opacity: 0.14; color: var(--ink); transform: rotate(7deg); }
+.doodle--d { top: 34vh; right: 12vw; width: 54px; transform: rotate(18deg); }
+
+@media (max-width: 900px) { .doodle { display: none; } }
+
+/* ---------- shell ---------- */
+
+.site-head,
+main,
+.site-foot { position: relative; z-index: 1; }
+
+.site-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 22px 28px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.brand img { width: 40px; transform: rotate(-6deg); }
+
+.brand span {
+  font-family: var(--marker);
+  font-size: 26px;
+  letter-spacing: 0.5px;
+  line-height: 1;
+  padding-top: 4px;
+}
+
+.nav { display: flex; align-items: center; gap: 26px; }
+
+.nav a {
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.nav a:not(.btn):hover { color: var(--orange); }
+
+@media (max-width: 780px) {
+  .nav a:not(.btn) { display: none; }
+}
+
+/* ---------- buttons: drawn, and sitting on their own second stroke ---------- */
+
+.btn {
+  display: inline-block;
+  font-family: var(--body);
+  font-weight: 800;
+  font-size: 17px;
+  text-decoration: none;
+  color: var(--ink);
+  background: var(--yellow);
+  border: var(--draw) solid var(--ink);
+  border-radius: var(--box);
+  padding: 13px 26px;
+  box-shadow: 5px 6px 0 var(--ink);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.btn:hover { transform: translate(2px, 3px); box-shadow: 2px 3px 0 var(--ink); }
+.btn--sm { padding: 9px 18px; font-size: 15px; box-shadow: 4px 4px 0 var(--ink); }
+.btn--lg { padding: 16px 34px; font-size: 20px; border-radius: var(--box-alt); }
+.btn--ghost { background: transparent; }
+
+/* ---------- hero ---------- */
+
+.hero {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 40px 28px 90px;
+  display: grid;
+  grid-template-columns: 1.08fr 0.92fr;
+  gap: 54px;
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; gap: 34px; padding-bottom: 60px; }
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 18px;
+  font-family: var(--hand);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.pin {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--orange);
+  border: 2.5px solid var(--ink);
+}
+
+h1 {
+  margin: 0 0 22px;
+  font-family: var(--marker);
+  font-weight: 400;
+  font-size: clamp(46px, 7.2vw, 86px);
+  line-height: 1.04;
+  letter-spacing: 0.5px;
+}
+
+/* The highlight is a drawn stroke under the word, not a background colour —
+   the mark it copies was made with a pen, and a rectangle of colour reads as
+   a highlighter, which is a different object entirely. */
+.hl { position: relative; display: inline-block; color: var(--orange); }
+
+.scribble {
+  position: absolute;
+  left: -2%;
+  bottom: -0.16em;
+  width: 104%;
+  height: 0.3em;
+  color: var(--yellow);
+}
+
+.lede {
+  margin: 0 0 30px;
+  font-size: 20px;
+  max-width: 40ch;
+  color: var(--ink-soft);
+}
+
+.lede strong { color: var(--ink); }
+
+.cta-row { display: flex; flex-wrap: wrap; gap: 16px; }
+
+.hero-art { position: relative; display: grid; place-items: center; }
+
+.hero-art img {
+  width: min(430px, 100%);
+  transform: rotate(-3deg);
+  position: relative;
+  z-index: 1;
+}
+
+/* Light coming off the bulb, thrown on the paper behind it. */
+.glow {
+  position: absolute;
+  width: 118%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    rgba(246, 185, 59, 0.42) 0%,
+    rgba(246, 185, 59, 0.16) 52%,
+    transparent 100%
+  );
+}
+
+/* ---------- sections ---------- */
+
+.section {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 84px 28px;
+}
+
+.section-title {
+  margin: 0 0 10px;
+  font-family: var(--marker);
+  font-weight: 400;
+  font-size: clamp(34px, 4.4vw, 52px);
+  line-height: 1.1;
+  text-align: center;
+}
+
+.section-title--left { text-align: left; }
+
+.section-sub {
+  margin: 0 auto 52px;
+  text-align: center;
+  font-family: var(--hand);
+  font-size: 26px;
+  color: var(--ink-soft);
+  max-width: 32ch;
+}
+
+/* ---------- cards ---------- */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+@media (max-width: 880px) { .cards { grid-template-columns: 1fr; } }
+
+.card {
+  background: var(--paper-2);
+  border: var(--draw) solid var(--ink);
+  border-radius: var(--box);
+  box-shadow: 7px 8px 0 var(--ink);
+  padding: 32px 28px 30px;
+}
+
+/* Alternating, so the row reads as pinned up rather than laid out on a grid. */
+.card--tilt-l { transform: rotate(-1.1deg); }
+.card--tilt-r { transform: rotate(1.3deg); }
+
+.card-icon {
+  width: 62px;
+  height: 62px;
+  margin-bottom: 18px;
+  display: grid;
+  place-items: center;
+  color: var(--ink);
+  background: var(--yellow);
+  border: var(--draw) solid var(--ink);
+  border-radius: var(--box-alt);
+}
+
+.card-icon svg { width: 34px; height: 34px; }
+
+.card h3 {
+  margin: 0 0 10px;
+  font-family: var(--marker);
+  font-weight: 400;
+  font-size: 27px;
+  line-height: 1.15;
+}
+
+.card p { margin: 0; color: var(--ink-soft); font-size: 17px; }
+
+/* ---------- the student-led band ---------- */
+
+.band { padding-top: 30px; padding-bottom: 30px; }
+
+.band-inner {
+  background: var(--yellow);
+  border: var(--draw) solid var(--ink);
+  border-radius: var(--box-alt);
+  box-shadow: 9px 10px 0 var(--ink);
+  padding: 54px 48px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .band-inner { grid-template-columns: 1fr; padding: 38px 26px; gap: 30px; }
+}
+
+.band-copy h2 {
+  margin: 0 0 18px;
+  font-family: var(--marker);
+  font-weight: 400;
+  font-size: clamp(34px, 4.6vw, 52px);
+  line-height: 1.06;
+}
+
+.band-copy p { margin: 0 0 16px; font-size: 18px; }
+
+.note {
+  font-family: var(--hand);
+  font-size: 27px;
+  font-weight: 700;
+  transform: rotate(-1.4deg);
+  display: inline-block;
+}
+
+.values { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+
+.values li {
+  background: var(--paper);
+  border: var(--draw) solid var(--ink);
+  border-radius: var(--box);
+  padding: 18px 22px;
+  font-size: 16.5px;
+  color: var(--ink-soft);
+  box-shadow: 5px 5px 0 var(--ink);
+}
+
+.values li:nth-child(even) { transform: rotate(0.9deg); }
+.values li:nth-child(odd) { transform: rotate(-0.7deg); }
+
+.values span {
+  display: block;
+  font-family: var(--marker);
+  font-size: 22px;
+  color: var(--ink);
+  line-height: 1.2;
+  margin-bottom: 2px;
+}
+
+/* ---------- about ---------- */
+
+.about {
+  display: grid;
+  grid-template-columns: 0.75fr 1.25fr;
+  gap: 56px;
+  align-items: center;
+}
+
+@media (max-width: 880px) {
+  .about { grid-template-columns: 1fr; gap: 28px; }
+  .about-art { max-width: 220px; }
+}
+
+.about-art img { transform: rotate(5deg); }
+
+.about-copy p { color: var(--ink-soft); margin: 0 0 16px; }
+
+/* ---------- contact ---------- */
+
+.contact { padding-top: 40px; }
+
+.contact-box {
+  background: var(--paper-2);
+  border: var(--draw) solid var(--ink);
+  border-radius: var(--box);
+  box-shadow: 9px 10px 0 var(--ink);
+  padding: 56px 34px 48px;
+  text-align: center;
+  transform: rotate(-0.6deg);
+}
+
+.contact-box h2 {
+  margin: 0 0 12px;
+  font-family: var(--marker);
+  font-weight: 400;
+  font-size: clamp(34px, 4.6vw, 52px);
+  line-height: 1.1;
+}
+
+.contact-box p { margin: 0 auto 26px; max-width: 46ch; color: var(--ink-soft); }
+
+.contact-box .btn { word-break: break-word; }
+
+.contact-where {
+  margin-top: 26px !important;
+  font-family: var(--hand);
+  font-size: 23px;
+}
+
+/* ---------- foot ---------- */
+
+.site-foot {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 60px 28px 54px;
+  text-align: center;
+  border-top: var(--draw) dashed rgba(34, 32, 29, 0.22);
+  margin-top: 40px;
+}
+
+.site-foot img { width: 40px; margin: 0 auto 12px; transform: rotate(4deg); }
+.site-foot p { margin: 0; font-size: 15px; color: var(--ink-soft); }
+.foot-tag { font-family: var(--hand); font-size: 21px; margin-top: 4px !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .btn { transition: none; }
+}
