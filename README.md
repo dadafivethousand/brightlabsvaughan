@@ -28,6 +28,22 @@ npx wrangler pages deploy public --project-name=brightlabsvaughan
 Production is `brightlabsvaughan.com`; every deploy also gets its own
 `*.brightlabsvaughan.pages.dev` preview URL.
 
+### The custom domain needs two DNS records added by hand
+
+Both custom domains are attached to the Pages project and sit at `pending`
+until the zone points at it. Wrangler's OAuth token carries `pages:write` and
+`zone:read` and **no DNS write scope at all**, so neither wrangler nor the API
+can create these — and no amount of `wrangler login` fixes it, because DNS write
+is not among the scopes wrangler asks for. They have to come from the dashboard:
+
+| Type  | Name  | Target                        | Proxy |
+|-------|-------|-------------------------------|-------|
+| CNAME | `@`   | `brightlabsvaughan.pages.dev` | on    |
+| CNAME | `www` | `brightlabsvaughan.pages.dev` | on    |
+
+Adding the custom domain from **Pages → the project → Custom domains** creates
+them for you; doing it over the API, as here, does not.
+
 ## The style
 
 The logo is hand-drawn — marker-weight bulb, sketchy rays, marker lettering —
