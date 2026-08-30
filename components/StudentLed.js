@@ -1,5 +1,3 @@
-import Stroke from "./Stroke";
-
 const VALUES = [
   ["Exciting", "Science that earns attention instead of demanding it."],
   ["Accessible", "No prior spark required — we bring that part."],
@@ -11,10 +9,7 @@ export default function StudentLed() {
     <section id="student-led" className="section band">
       <div className="band-inner">
         <div className="band-copy" data-reveal="left">
-          <h2>
-            Student-led,<br />
-            <span className="marked">on purpose.<Stroke /></span>
-          </h2>
+          <h2>Student-led,<br />on purpose.</h2>
           <p>
             Bright Labs is run by students. That is not a footnote — it is the
             whole idea. The people leading our sessions learned this material

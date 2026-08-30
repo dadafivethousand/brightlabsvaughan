@@ -3,7 +3,6 @@
 // needs a Cloudflare Email Routing rule forwarding to a real mailbox FIRST,
 // or the site is advertising a mailbox nobody reads. See the README.
 import Social from "./Social";
-import Stroke from "./Stroke";
 
 const EMAIL = "brightlabsvaughan@gmail.com";
 
@@ -17,9 +16,7 @@ export default function Contact() {
   return (
     <section id="contact" className="section contact">
       <div className="contact-box" data-reveal="pin">
-        <h2>
-          <span className="marked marked--ring">Let&apos;s talk<Stroke shape="ring" /></span>
-        </h2>
+        <h2>Let&apos;s talk</h2>
         <p>
           Questions about tutoring, workshops, or bringing Bright Labs to your
           classroom or group? Send us a note or give us a call.

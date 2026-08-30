@@ -736,86 +736,6 @@ h1 {
 /* the one object that grows instead of travelling */
 .js [data-reveal="pop"] { --pop: 0.9; --fall: 14px; }
 
-/* ---------- annotation strokes ----------
- *
- * The same trick as the hero's underline, generalised to the section titles: a
- * single path, dashed to its own length and unrolled by animating the offset,
- * so the mark is DRAWN. `pathLength="1"` on the path is what lets one rule here
- * drive both an underline and a ring — without it each shape needs its real
- * length measured and hard-coded, and a wrong number either finishes the stroke
- * early or never closes it.
- *
- * It fires off `.is-in`, so an annotation lands when the section it belongs to
- * arrives, and it is a descendant selector on purpose: some of these headings
- * are the reveal target themselves and some sit inside one.
- */
-.marked {
-  position: relative;
-  display: inline-block;
-}
-
-.stroke {
-  position: absolute;
-  pointer-events: none;
-  color: var(--yellow);
-  overflow: visible;
-}
-
-.stroke path {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 7;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.stroke--under {
-  left: -2%;
-  bottom: -0.2em;
-  width: 104%;
-  height: 0.26em;
-}
-
-/* The ring has to sit OUTSIDE the word, not under it, so it is inset negatively
-   on all four edges and the box is allowed to overflow its heading. */
-.stroke--ring {
-  /* Wider than it looks like it needs to be. At 114% the loop cut through the
-     L and the K — a circled word has to clear its own letters or it reads as a
-     strikethrough. */
-  left: -11%;
-  top: -30%;
-  width: 122%;
-  height: 162%;
-}
-
-.stroke--ring path { stroke-width: 5; }
-
-/* On the yellow band a yellow stroke is invisible — it goes to ink there. */
-.band .stroke { color: var(--ink); }
-
-.js .stroke path {
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-}
-
-.js .is-in .stroke path {
-  animation: fw-draw 0.75s 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-/* ---------- magnetic controls ----------
- * The lean itself is written from JS onto `translate`; this is only the easing
- * that keeps it from being a hard snap. Short — long enough to feel sprung,
- * short enough that the control still arrives under the cursor rather than
- * trailing it. */
-.btn,
-.social {
-  transition:
-    transform 0.12s ease,
-    box-shadow 0.12s ease,
-    background 0.12s ease,
-    translate 0.18s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
 /* The underline draws itself as the headline lands. One stroke, one direction,
    which is how it was made — a highlight that fades up as a whole looks
    printed, and this word is meant to look written. Scoped to `.js` with the
@@ -849,5 +769,4 @@ h1 {
   }
 
   .js .scribble path { stroke-dashoffset: 0; }
-  .js .stroke path { stroke-dashoffset: 0; animation: none; }
 }

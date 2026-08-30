@@ -1,5 +1,3 @@
-import Stroke from "./Stroke";
-
 export default function About() {
   return (
     <section id="about" className="section about">
@@ -7,9 +5,7 @@ export default function About() {
         <img src="/assets/bulb.png" alt="" />
       </div>
       <div className="about-copy" data-reveal="right" style={{ "--d": "110ms" }}>
-        <h2 className="section-title section-title--left">
-          <span className="marked">About Bright Labs<Stroke /></span>
-        </h2>
+        <h2 className="section-title section-title--left">About Bright Labs</h2>
         <p>
           We are a student-led tutoring and education organization based in
           Vaughan, Ontario, working with young learners who are somewhere on the
