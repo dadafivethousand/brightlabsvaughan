@@ -472,6 +472,90 @@ h1 {
   font-size: 23px;
 }
 
+/* ---------- socials ----------
+ *
+ * Drawn buttons, same pen as everything else: an irregular border-radius so the
+ * four corners disagree the way a pen's would, and a hard offset shadow that is
+ * the second pass of a sketch rather than a light source. They press INTO that
+ * shadow on hover, which is the same gesture the main buttons make.
+ */
+.socials {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+}
+
+.social {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--ink);
+  font-weight: 800;
+  background: var(--paper);
+  border: var(--draw) solid var(--ink);
+  border-radius: var(--box);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+
+.social svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.social:hover { background: var(--yellow); }
+
+/* The call-to-action pair in the contact card. */
+.socials--lg .social {
+  padding: 11px 22px 11px 18px;
+  font-size: 16px;
+  box-shadow: 5px 6px 0 var(--ink);
+}
+
+.socials--lg .social svg { width: 22px; height: 22px; }
+.socials--lg .social:hover { transform: translate(2px, 3px); box-shadow: 2px 3px 0 var(--ink); }
+
+/* The footer pair is smaller and quieter — a courtesy, not an ask. */
+.socials--sm {
+  margin-bottom: 16px;
+  gap: 10px;
+}
+
+.socials--sm .social {
+  padding: 8px 16px 8px 13px;
+  font-size: 14px;
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.socials--sm .social svg { width: 18px; height: 18px; }
+.socials--sm .social:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+
+/* Alternating, so a row of two reads as pinned up rather than laid out. */
+.socials li:nth-child(odd) .social { transform: rotate(-1.1deg); }
+.socials li:nth-child(even) .social { transform: rotate(1.2deg); }
+.socials--lg li:nth-child(odd) .social:hover { transform: translate(2px, 3px) rotate(-1.1deg); }
+.socials--lg li:nth-child(even) .social:hover { transform: translate(2px, 3px) rotate(1.2deg); }
+.socials--sm li:nth-child(odd) .social:hover { transform: translate(2px, 2px) rotate(-1.1deg); }
+.socials--sm li:nth-child(even) .social:hover { transform: translate(2px, 2px) rotate(1.2deg); }
+
+.contact-follow {
+  /* `auto` on the sides, not 0. `.contact-box p` caps these at 46ch, so a
+     margin of 0 pins that narrower block to the left edge and the centred text
+     inside it lands left of the card's centre — which is what the first pass
+     did. */
+  margin: 30px auto 14px !important;
+  font-family: var(--hand);
+  font-size: 22px;
+  color: var(--ink-soft);
+}
+
 /* ---------- support ----------
  * A second card, pinned the other way. It is deliberately smaller and quieter
  * than the contact box above it: asking for money is not the point of the page
@@ -633,7 +717,7 @@ h1 {
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .btn { transition: none; }
+  .btn, .social { transition: none; }
 
   /* The observer also short-circuits in JS, but this makes the page correct
      even in the frame before it runs. */

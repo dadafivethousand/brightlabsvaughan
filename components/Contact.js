@@ -2,6 +2,8 @@
 // configuration on the domain at all. Moving it to @brightlabsvaughan.com
 // needs a Cloudflare Email Routing rule forwarding to a real mailbox FIRST,
 // or the site is advertising a mailbox nobody reads. See the README.
+import Social from "./Social";
+
 const EMAIL = "brightlabsvaughan@gmail.com";
 
 // Written for a human, dialled by a machine. `tel:` wants the full E.164
@@ -23,6 +25,12 @@ export default function Contact() {
           <a className="btn btn--lg" href={`mailto:${EMAIL}`}>{EMAIL}</a>
           <a className="btn btn--lg btn--ghost" href={`tel:${PHONE_TEL}`}>{PHONE}</a>
         </div>
+        {/* Under the email and phone, not beside them. Following on Instagram
+            is a different intention from booking a session, and putting the
+            two at the same weight makes the page ask for two things at once. */}
+        <p className="contact-follow">Or find us here</p>
+        <Social size="lg" />
+
         <p className="contact-where">Serving Vaughan &amp; the surrounding area</p>
       </div>
 
