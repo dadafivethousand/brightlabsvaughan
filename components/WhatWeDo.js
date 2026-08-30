@@ -1,3 +1,5 @@
+import Stroke from "./Stroke";
+
 /* Three ways into the same idea. The tilt classes alternate direction on
  * purpose — a row of cards all leaning the same way reads as a mistake, and
  * alternating is what makes it read as pinned up. */
@@ -51,7 +53,9 @@ const CARDS = [
 export default function WhatWeDo() {
   return (
     <section id="what" className="section">
-      <h2 className="section-title" data-reveal="up">What we do</h2>
+      <h2 className="section-title" data-reveal="up">
+        <span className="marked">What we do<Stroke /></span>
+      </h2>
       <p className="section-sub" data-reveal="up" style={{ "--d": "80ms" }}>
         Three ways into the same idea — that science is a thing you get to <em>do</em>.
       </p>
