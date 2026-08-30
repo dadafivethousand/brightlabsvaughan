@@ -26,9 +26,16 @@
   --rule: rgba(34, 32, 29, 0.055);
 
   --draw: 3px;
-  --marker: "Permanent Marker", "Caveat", system-ui, sans-serif;
-  --hand: "Caveat", cursive;
-  --body: "Nunito", ui-rounded, system-ui, -apple-system, sans-serif;
+  /* The three faces come from `next/font/google` in app/layout.js, which
+     self-hosts them and hands each one down as a CSS variable. Nothing else in
+     this file changed when the site moved to Next: every rule below already
+     asked for --marker / --hand / --body rather than naming a family, so
+     swapping the source of those three lines was the whole migration as far as
+     the stylesheet is concerned. The literal names stay as the fallback for
+     anyone opening this file outside the app. */
+  --marker: var(--font-marker), "Permanent Marker", "Caveat", system-ui, sans-serif;
+  --hand: var(--font-hand), "Caveat", cursive;
+  --body: var(--font-body), "Nunito", ui-rounded, system-ui, -apple-system, sans-serif;
 
   /* one pen stroke, four corners that disagree */
   --box: 22px 40px 26px 36px / 34px 24px 38px 26px;

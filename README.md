@@ -4,18 +4,41 @@ Marketing site for **Bright Labs Vaughan** — a student-led tutoring and
 education organization making science exciting, accessible and inspiring for
 young learners, through tutoring, workshops and unique experiments.
 
-Static. No build step, no framework: one page, one stylesheet, a handful of
-images. That is the whole thing, deliberately — it loads instantly, it can be
-edited by anyone who can read HTML, and there is no toolchain to rot between
-the times someone needs to change a sentence.
+**Next.js 15, App Router, JavaScript** — exported to static HTML. One page, one
+stylesheet, a handful of images; it is still a static site at the far end, and
+still loads with no server work in it. What Next buys here is the pieces that
+were hand-rolled before: the fonts are self-hosted instead of fetched from
+Google on every visit, the metadata and Open Graph tags are declared once in
+`app/layout.js`, and the page is components rather than 182 lines of markup in
+one file.
 
 ```
-public/          what ships
-  index.html
-  styles.css
+app/
+  layout.js      the document shell: metadata, the three faces, globals.css
+  page.js        composes the sections, in order
+  not-found.js   exported as out/404.html
+  globals.css    the whole style, unchanged from the static site
+components/      one file per section of the page
+public/
   assets/        the mark, cut out of its original white background
 brand/           the logo as supplied, untouched
+out/             what ships — generated, git-ignored
 ```
+
+### Why `output: "export"` and not @opennextjs/cloudflare
+
+There is no server work on this site: nothing is fetched, nothing is posted,
+no route differs between two requests. `output: "export"` turns `next build`
+into a directory of finished HTML, which the existing Worker uploads exactly
+the way it uploaded `public/` — same assets-only Worker, same `custom_domain`
+routes, so the DNS reasoning below survives the move untouched. The other two
+Next sites on this machine use @opennextjs/cloudflare because they have server
+routes; bringing that runtime here would add a Worker script to render a page
+that is identical every time.
+
+If this site ever grows an API route, a server action or ISR: install
+`@opennextjs/cloudflare`, drop the `output` line from `next.config.mjs`, and
+point the deploy script at it.
 
 ## Deploy
 
@@ -23,16 +46,19 @@ Cloudflare **Workers** (Static Assets), not Pages:
 
 ```bash
 npm install        # once, on a new machine
-npm run deploy
-npm run dev        # local preview at 127.0.0.1:8787
+npm run dev        # Next dev server at localhost:3000
+npm run build      # writes out/
+npm run preview    # build, then serve out/ through wrangler at 127.0.0.1:8787
+npm run deploy     # build, then upload
 ```
 
-`wrangler` is the only dependency and it is pinned in `package.json`, so a fresh
-clone needs nothing else installed to ship. You will be asked to
-`wrangler login` once per machine.
+You will be asked to `wrangler login` once per machine.
 
-That is the whole deploy. `public/` is uploaded and served directly; there is no
-`main`, because an assets-only Worker needs no script.
+`out/` is uploaded and served directly; there is no `main`, because an
+assets-only Worker needs no script. `not_found_handling` is `404-page` rather
+than `single-page-application`: the export emits a real `out/404.html`, and SPA
+handling would serve `index.html` for every miss instead — a wrong URL would
+quietly render the home page with a 200.
 
 ### Why Workers and not Pages
 
@@ -76,7 +102,11 @@ so the site is too. Three rules hold it together:
    own rays scattered behind the content at low contrast.
 
 Type is Permanent Marker for anything that wants to look written, Caveat for
-margin notes, and Nunito for everything that has to be read.
+margin notes, and Nunito for everything that has to be read. All three are
+loaded by `next/font/google` in `app/layout.js` and handed to CSS as
+`--font-marker` / `--font-hand` / `--font-body`; `app/globals.css` routes every
+rule through its own `--marker` / `--hand` / `--body`, which is why moving to
+Next changed three lines of the stylesheet and nothing else.
 
 ## Copy
 

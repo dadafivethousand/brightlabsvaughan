@@ -1,10 +1,18 @@
 {
   "name": "brightlabsvaughan",
   "private": true,
-  "description": "brightlabsvaughan.com — static site on Cloudflare Workers",
+  "description": "brightlabsvaughan.com — Next.js, exported static, on Cloudflare Workers",
   "scripts": {
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "npx serve@latest out",
+    "preview": "npm run build && wrangler dev",
+    "deploy": "npm run build && wrangler deploy"
+  },
+  "dependencies": {
+    "next": "^15.5.4",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
   },
   "devDependencies": {
     "wrangler": "^4.127.1"

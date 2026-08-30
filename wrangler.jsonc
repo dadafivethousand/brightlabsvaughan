@@ -9,13 +9,23 @@
   // the Workers service itself under `workers_routes:write`, which the token
   // does have, so it creates the record and orders the certificate on its own.
   //
-  // Same static files either way. `public/` is served directly; there is no
-  // `main`, because an assets-only Worker does not need a script.
+  // Same static files either way. There is no `main`, because an assets-only
+  // Worker does not need a script.
+  //
+  // The directory is `./out` now, not `./public`: the site is a Next app built
+  // with `output: "export"`, so `next build` writes finished HTML there and
+  // this Worker uploads it unchanged. That is the ENTIRE deploy-side cost of
+  // the move to Next — the Worker, the routes and the DNS story above are
+  // untouched, which is why the export was chosen over @opennextjs/cloudflare.
   "name": "brightlabsvaughan",
   "compatibility_date": "2026-08-01",
   "assets": {
-    "directory": "./public",
-    "not_found_handling": "single-page-application"
+    "directory": "./out",
+    // 404-page, not single-page-application: an exported Next build emits a
+    // real out/404.html from app/not-found, and SPA handling would serve
+    // index.html for every miss instead — a wrong URL would silently render
+    // the home page with a 200.
+    "not_found_handling": "404-page"
   },
   "routes": [
     { "pattern": "brightlabsvaughan.com", "custom_domain": true },
