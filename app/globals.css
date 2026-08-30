@@ -684,10 +684,15 @@ h1 {
  * in the first third, and the last few pixels take as long as the first thirty.
  * That is what reads as weight: paper settling rather than a div appearing.
  *
- * The blur is small and does a specific job. Going from 8px to 0 alongside the
- * move gives the eye a focus pull, so a card reads as coming INTO the page
- * rather than sliding across a flat surface — and it hides the one frame where
- * a half-opacity element looks like a rendering mistake.
+ * NO BLUR. An earlier version pulled focus from 8px to 0 alongside the move, on
+ * the theory that it read as coming INTO the page rather than sliding across a
+ * flat surface. In practice it read as exactly what it was — text out of focus —
+ * and `filter` forces the element into its own layer, so the type is rasterised
+ * once and resampled all the way in. Every element on this page is either type
+ * or a hand-drawn edge, and both are the worst things to soften.
+ *
+ * The move and the fade do the whole job. Things float in; they are never out
+ * of focus for a single frame.
  */
 .js [data-reveal] {
   --fall: 26px;
@@ -699,13 +704,11 @@ h1 {
   translate: var(--shift) var(--fall);
   rotate: calc(var(--tilt, 0deg) + var(--swing));
   scale: var(--pop);
-  filter: blur(8px);
   transition:
     opacity 0.5s linear,
     translate 0.85s cubic-bezier(0.16, 1, 0.3, 1),
     rotate 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-    scale 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-    filter 0.55s ease-out;
+    scale 0.85s cubic-bezier(0.16, 1, 0.3, 1);
   transition-delay: var(--d, 0ms);
 }
 
@@ -714,7 +717,6 @@ h1 {
   translate: 0 0;
   rotate: var(--tilt, 0deg);
   scale: 1;
-  filter: blur(0);
 }
 
 /* ---------- the four ways in ----------
