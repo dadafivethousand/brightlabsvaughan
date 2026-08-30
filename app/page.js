@@ -6,6 +6,7 @@ import StudentLed from "@/components/StudentLed";
 import About from "@/components/About";
 import Contact from "@/components/Contact";
 import SiteFooter from "@/components/SiteFooter";
+import Reveal from "@/components/Reveal";
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
         <Contact />
       </main>
       <SiteFooter />
+      <Reveal />
     </>
   );
 }

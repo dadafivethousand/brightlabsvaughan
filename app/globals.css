@@ -509,12 +509,6 @@ h1 {
   white-space: nowrap;
 }
 
-.support-note {
-  margin: 16px auto 0 !important;
-  font-family: var(--hand);
-  font-size: 21px;
-  color: var(--ink-soft);
-}
 
 /* On a phone the drawn cards give back some of their inset, which is what
    lets the email sit on one line at a readable size instead of shrinking to
@@ -539,7 +533,43 @@ h1 {
 .site-foot p { margin: 0; font-size: 15px; color: var(--ink-soft); }
 .foot-tag { font-family: var(--hand); font-size: 21px; margin-top: 4px !important; }
 
+/* ---------- reveal on scroll ----------
+ *
+ * THE HIDDEN STATE IS SCOPED TO `.js`, which an inline script in the document
+ * sets before the body is parsed. Unscoped, a visitor with JavaScript off — or
+ * a scraper, or a browser where the script 404s — gets a page of permanently
+ * invisible content, which is the standard way this effect fails. With the
+ * scope, the worst case is simply the static page it was before.
+ *
+ * `translate`, NOT `transform`. Half the boxes here are already a degree or two
+ * off true by their own `transform: rotate()`, and a reveal written as
+ * `transform: translateY(...)` REPLACES that rotation — the cards would
+ * straighten themselves out as they arrived, which is the one thing the whole
+ * pinned-up style is built to avoid. The individual `translate` property
+ * composes with `transform` instead of overwriting it.
+ *
+ * The distance is small on purpose. This is a lab notebook, not a deck: things
+ * settle onto the page, they do not fly across it.
+ */
+.js [data-reveal] {
+  opacity: 0;
+  translate: 0 22px;
+  transition:
+    opacity 0.55s ease,
+    translate 0.6s cubic-bezier(0.22, 0.9, 0.3, 1);
+  transition-delay: var(--d, 0ms);
+}
+
+.js [data-reveal].is-in {
+  opacity: 1;
+  translate: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .btn { transition: none; }
+
+  /* The observer also short-circuits in JS, but this makes the page correct
+     even in the frame before it runs. */
+  .js [data-reveal] { opacity: 1; translate: none; transition: none; }
 }

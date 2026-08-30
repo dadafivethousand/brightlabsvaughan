@@ -51,14 +51,21 @@ const CARDS = [
 export default function WhatWeDo() {
   return (
     <section id="what" className="section">
-      <h2 className="section-title">What we do</h2>
-      <p className="section-sub">
+      <h2 className="section-title" data-reveal>What we do</h2>
+      <p className="section-sub" data-reveal style={{ "--d": "70ms" }}>
         Three ways into the same idea — that science is a thing you get to <em>do</em>.
       </p>
 
       <div className="cards">
-        {CARDS.map((c) => (
-          <article className={`card ${c.tilt}`} key={c.key}>
+        {/* The stagger is per card, so the row lands left to right rather than
+            as one block. --d is what the reveal transition reads for its delay. */}
+        {CARDS.map((c, i) => (
+          <article
+            className={`card ${c.tilt}`}
+            key={c.key}
+            data-reveal
+            style={{ "--d": `${90 + i * 90}ms` }}
+          >
             <div className="card-icon">
               <svg viewBox="0 0 64 64">{c.icon}</svg>
             </div>

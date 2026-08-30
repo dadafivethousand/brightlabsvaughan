@@ -131,6 +131,34 @@ rule forwarding to a real mailbox first, or the site will be advertising a
 mailbox nobody reads — **and it has to be changed in both places**, or donations
 go to an inbox nobody is watching.
 
+## Reveal on scroll
+
+`components/Reveal.js` is one `IntersectionObserver` for the whole page: it
+mounts once, finds every `[data-reveal]` element and adds `is-in` as each
+crosses into view, then stops observing it. Doing it centrally is what keeps
+every section a **server** component — this is the only JavaScript the effect
+ships.
+
+Three things about it are load-bearing:
+
+- **The hidden state is scoped to `.js`**, a class an inline script in
+  `app/layout.js` sets while the body is still parsing. Unscoped, a visitor with
+  JavaScript off gets a page of permanently invisible content — the standard way
+  this effect fails. Scoped, the worst case is the static page it was before.
+- **`translate`, not `transform`.** Half the boxes here are already a degree or
+  two off true by their own `transform: rotate()`. A reveal written as
+  `transform: translateY(...)` replaces that rotation, so the cards would
+  straighten themselves out as they arrived — the one thing the pinned-up style
+  exists to avoid. The individual `translate` property composes instead.
+- **`threshold: 0` with a negative bottom `rootMargin`**, not a fractional
+  threshold. Asking for 15% of an element to be visible behaves differently for
+  a small card and for a panel taller than the window; "fire when the top edge
+  crosses 88% of the viewport" behaves the same for both.
+
+Stagger is a `--d` custom property per element, read by the transition's delay.
+Reduced-motion viewers get everything visible with no transition, in CSS and
+again in the observer.
+
 ## Buttons do not wrap
 
 Every button is a pen outline with a hard offset shadow behind it, and the

@@ -70,7 +70,20 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${marker.variable} ${hand.variable} ${body.variable}`}>
-      <body>{children}</body>
+      <body>
+        {/* Runs while the body is still being parsed, so the reveal's hidden
+            state is in force before anything paints — no flash of the finished
+            page collapsing into the animation. It is also the switch that keeps
+            the effect honest: the hidden state is scoped to `.js`, so if this
+            never runs the site is simply the static page it was before, rather
+            than a screen of invisible content. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: "document.documentElement.classList.add('js')",
+          }}
+        />
+        {children}
+      </body>
     </html>
   );
 }
