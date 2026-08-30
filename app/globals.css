@@ -105,7 +105,52 @@ main,
   color: var(--ink);
 }
 
-.brand img { width: 40px; transform: rotate(-6deg); }
+/* The mark in the header is a scroll meter — see components/BulbMeter.js. The
+ * sizing and the tilt move onto the WRAPPER, or the two stacked copies inside
+ * it each pick up the rotation and land at different angles. */
+.brand .bulb-meter {
+  position: relative;
+  display: block;
+  flex: none;
+  width: 40px;
+  transform: rotate(-6deg);
+}
+
+.brand .bulb-meter img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* The lit copy, clipped from the bottom up. `--p` is 0 at the top of the page
+ * and 1 at the bottom; at 0 this layer is entirely clipped away and the mark is
+ * simply itself. */
+.bulb-meter-lit {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(calc((1 - var(--p, 0)) * 100%) 0 0 0);
+  filter:
+    brightness(1.22) saturate(1.35)
+    drop-shadow(0 0 calc(var(--p, 0) * 7px) rgba(246, 185, 59, 0.9));
+}
+
+/* Light thrown on the header behind it, growing with the same value. Pointer
+ * events off and behind the mark, so it can never intercept the home link. */
+.bulb-meter::after {
+  content: "";
+  position: absolute;
+  inset: -55%;
+  z-index: -1;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: calc(var(--p, 0) * 0.8);
+  background: radial-gradient(
+    closest-side,
+    rgba(246, 185, 59, 0.55) 0%,
+    rgba(246, 185, 59, 0.16) 55%,
+    transparent 100%
+  );
+}
 
 .brand span {
   font-family: var(--marker);
@@ -145,7 +190,7 @@ main,
    wordmark give way first, in that order, and the labels stay whole. */
 @media (max-width: 430px) {
   .site-head { padding: 18px 16px; gap: 10px; }
-  .brand img { width: 34px; }
+  .brand .bulb-meter { width: 34px; }
   .brand span { font-size: 22px; }
   .btn--sm { padding: 9px 14px; font-size: 14px; }
 
