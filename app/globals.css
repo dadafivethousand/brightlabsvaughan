@@ -97,16 +97,6 @@ main,
   padding: 22px 28px;
 }
 
-/* Brand and socials as one left-hand group. Row while there is room; stacked
- * the moment there is not, which is what keeps the glyphs off the wordmark and
- * the CTA on the screen. */
-.head-brand {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  min-width: 0;
-}
-
 .brand {
   display: flex;
   align-items: center;
@@ -138,24 +128,15 @@ main,
 .nav a:not(.btn):hover { color: var(--orange); }
 
 @media (max-width: 780px) {
-  /* The socials are no longer inside .nav, so this only reaches the text
-     links now — which is all it was ever meant to reach. */
-  .nav a:not(.btn) { display: none; }
+  /* `:not(.social)` is LOAD-BEARING. This rule hides the nav's text links on a
+     phone; the social glyphs are `a` elements inside the same nav, so without
+     the exclusion they vanish too — on exactly the devices where a tap through
+     to Instagram is most likely, and now that they are the only thing in the
+     nav, leaving the header with nothing on its right at all. Broken twice by
+     removing it. */
+  .nav a:not(.social) { display: none; }
 
   .nav { gap: 12px; }
-  .socials--icon { margin-left: 0; }
-}
-
-/* Under the wordmark rather than beside it. Above this the three of them —
-   mark, glyphs, button — still fit on one line; below it they do not, and at
-   360px the first pass ran "Get in touch" clean off the right edge. The button
-   is the one thing in this header that must not be what gives way. */
-@media (max-width: 560px) {
-  .head-brand {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 9px;
-  }
 }
 
 /* Below this the head is a mark and a button and nothing else, and the two of
@@ -579,7 +560,6 @@ h1 {
  * than as two more nav items. */
 .socials--icon {
   gap: 8px;
-  margin-left: -10px;
   /* Never wraps, at any width. `.socials` wraps by design, and this pair is one
      object — it breaks the header row before it breaks itself. It lives here
      rather than in the narrow-screen block because that block sits EARLIER in
