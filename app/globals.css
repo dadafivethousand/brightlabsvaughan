@@ -272,50 +272,6 @@ h1 {
   z-index: 1;
 }
 
-/* ---------- the bulb comes on ----------
- *
- * On load the mark is grey and unlit, then it strikes: a first flicker, a dip,
- * and a slightly-too-bright surge before it settles. The dip is the whole
- * trick. A clean grey-to-colour fade reads as an image loading; a filament
- * catching, failing and catching properly reads as a bulb, and it is two
- * keyframes' difference.
- *
- * Everything is on `filter` and `opacity` — no layout property is touched, so
- * the reveal that is already popping `.hero-art` into place can run at the same
- * time without the two fighting over `transform`. The mark's own `rotate(-3deg)`
- * survives for the same reason.
- *
- * It plays ONCE and holds the lit frame. A bulb that keeps flickering is a
- * broken bulb.
- *
- * 1500ms after a 250ms delay: the first pass ran 1900/350 and sat grey for a
- * full 1.07s before the filament caught, which does not read as a bulb warming
- * up, it reads as an image that has not finished loading.
- */
-@keyframes bl-strike {
-  0%,
-  24% { filter: grayscale(1) brightness(0.97) contrast(0.9); }
-  33% { filter: grayscale(0.28) brightness(1.15) contrast(1.02); }  /* catches */
-  42% { filter: grayscale(0.8) brightness(0.98) contrast(0.94); }   /* and drops */
-  60% { filter: grayscale(0) brightness(1.2) contrast(1.04); }      /* full, overshot */
-  78% { filter: grayscale(0) brightness(0.99); }
-  100% { filter: grayscale(0) brightness(1) contrast(1); }
-}
-
-@keyframes bl-bloom {
-  0%,
-  24% { opacity: 0; transform: scale(0.86); }
-  33% { opacity: 0.62; transform: scale(1.03); }
-  42% { opacity: 0.12; transform: scale(0.96); }
-  60% { opacity: 1; transform: scale(1.08); }
-  78% { opacity: 0.94; transform: scale(0.99); }
-  100% { opacity: 1; transform: scale(1); }
-}
-
-.hero-art img {
-  animation: bl-strike 1500ms cubic-bezier(0.32, 0.16, 0.24, 1) 250ms both;
-}
-
 /* Light coming off the bulb, thrown on the paper behind it. */
 .glow {
   position: absolute;
@@ -326,23 +282,6 @@ h1 {
     closest-side,
     rgba(246, 185, 59, 0.42) 0%,
     rgba(246, 185, 59, 0.16) 52%,
-    transparent 100%
-  );
-  animation: bl-bloom 1500ms cubic-bezier(0.32, 0.16, 0.24, 1) 250ms both;
-}
-
-/* The spill: a second, much wider and fainter pool so the light does not stop
- * at a hard edge. One gradient alone reads as a yellow disc behind the mark
- * rather than as light falling on paper. */
-.glow::after {
-  content: "";
-  position: absolute;
-  inset: -46%;
-  border-radius: 50%;
-  background: radial-gradient(
-    closest-side,
-    rgba(246, 185, 59, 0.2) 0%,
-    rgba(246, 185, 59, 0.07) 46%,
     transparent 100%
   );
 }
@@ -815,12 +754,6 @@ h1 {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .btn, .social { transition: none; }
-
-  /* No strike. Straight to lit — the point of the mark is that it is glowing,
-     so the destination is kept and only the journey is dropped. */
-  .hero-art img,
-  .glow { animation: none; }
-  .glow { opacity: 1; }
 
   /* The observer also short-circuits in JS, but this makes the page correct
      even in the frame before it runs. */
