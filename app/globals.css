@@ -97,6 +97,16 @@ main,
   padding: 22px 28px;
 }
 
+/* Brand and socials as one left-hand group. Row while there is room; stacked
+ * the moment there is not, which is what keeps the glyphs off the wordmark and
+ * the CTA on the screen. */
+.head-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
 .brand {
   display: flex;
   align-items: center;
@@ -128,14 +138,24 @@ main,
 .nav a:not(.btn):hover { color: var(--orange); }
 
 @media (max-width: 780px) {
-  /* `:not(.social)` matters: the rule below hides the nav's TEXT links, and
-     without it the social glyphs — which are `a` and not `.btn` — vanish with
-     them on exactly the devices where a tap through to Instagram is most
-     likely. */
-  .nav a:not(.btn):not(.social) { display: none; }
+  /* The socials are no longer inside .nav, so this only reaches the text
+     links now — which is all it was ever meant to reach. */
+  .nav a:not(.btn) { display: none; }
 
   .nav { gap: 12px; }
   .socials--icon { margin-left: 0; }
+}
+
+/* Under the wordmark rather than beside it. Above this the three of them —
+   mark, glyphs, button — still fit on one line; below it they do not, and at
+   360px the first pass ran "Get in touch" clean off the right edge. The button
+   is the one thing in this header that must not be what gives way. */
+@media (max-width: 560px) {
+  .head-brand {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 9px;
+  }
 }
 
 /* Below this the head is a mark and a button and nothing else, and the two of
