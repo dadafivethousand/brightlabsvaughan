@@ -112,11 +112,32 @@ Next changed three lines of the stylesheet and nothing else.
 
 The positioning paragraph in the hero is the client's own wording and should not
 be rewritten without asking. Section copy elsewhere is house wording built from
-it. **No prices, ages, schedules, addresses or phone numbers appear anywhere on
-the site, because none were supplied** — do not invent them to fill a gap.
+it. **No prices, ages, schedules or street address appear anywhere on the site,
+because none were supplied** — do not invent them to fill a gap.
+
+The phone number is `647-339-5448`, supplied by the client. It is written
+`+16473395448` in the `tel:` href — a bare ten-digit number is dialled against
+whatever country the handset thinks it is in.
 
 The contact address is `brightlabsvaughan@gmail.com` — a real inbox, so it works
-with no mail configuration on the domain at all. If it is ever moved to
+with no mail configuration on the domain at all. It appears twice: once as a
+`mailto:` button, and once in the support card as the **Interac e-Transfer**
+destination. That second one is deliberately **not a link** — an e-Transfer is
+sent from a banking app, not a mail client, so a `mailto:` there would open the
+wrong thing and look like the donation had been started. It is a tag with
+`user-select: all`, so one click selects the whole address to copy. If it is ever moved to
 `something@brightlabsvaughan.com`, that address needs a Cloudflare Email Routing
 rule forwarding to a real mailbox first, or the site will be advertising a
-mailbox nobody reads.
+mailbox nobody reads — **and it has to be changed in both places**, or donations
+go to an inbox nobody is watching.
+
+## Buttons do not wrap
+
+Every button is a pen outline with a hard offset shadow behind it, and the
+outline is sized by its text — so a label that breaks across two lines grows the
+box a second row of height while keeping the width of the longest word, and the
+result is a tall box with a hole in the corner. `.btn` is therefore
+`white-space: nowrap`. The email is the one label that cannot be shortened, so
+`.btn--lg` scales its font and padding with the viewport instead; it used to
+carry `word-break: break-word`, which split the address as
+`brightlabsvaughan@g / mail.com`.
