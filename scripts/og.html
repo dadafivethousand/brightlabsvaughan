@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Caveat:wght@600;700&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --yellow:#f6b93b; --orange:#ee8a3c; --ink:#22201d; --ink-soft:#55504a;
+    --paper:#fffcf3; --rule:rgba(34,32,29,.055);
+  }
+  * { box-sizing:border-box; margin:0; }
+  body {
+    width:1200px; height:630px; overflow:hidden;
+    background-color:var(--paper);
+    background-image:
+      linear-gradient(var(--rule) 1px, transparent 1px),
+      linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+    background-size:40px 40px;
+    font-family:Nunito, sans-serif; color:var(--ink);
+    display:grid; grid-template-columns:1.15fr .85fr; align-items:center;
+    padding:74px 78px; gap:40px; position:relative;
+  }
+  .rays { position:absolute; inset:0; pointer-events:none; }
+  .rays svg { position:absolute; }
+  .r1 { top:52px; left:520px; width:78px; color:var(--yellow); opacity:.34; transform:rotate(-12deg); }
+  .r2 { bottom:44px; left:60px; width:96px; color:var(--ink); opacity:.10; transform:rotate(8deg); }
+  .eyebrow { display:flex; align-items:center; gap:12px; font-family:Caveat,cursive; font-weight:700; font-size:34px; color:var(--ink-soft); margin-bottom:16px; }
+  .pin { width:17px; height:17px; border-radius:50%; background:var(--orange); border:3px solid var(--ink); }
+  h1 { font-family:"Permanent Marker", cursive; font-weight:400; font-size:82px; line-height:1.03; letter-spacing:.5px; }
+  .hl { position:relative; display:inline-block; color:var(--orange); }
+  .hl svg { position:absolute; left:-2%; right:-2%; bottom:-16px; width:104%; height:22px; color:var(--yellow); }
+  p { margin-top:24px; font-size:27px; line-height:1.5; color:var(--ink-soft); max-width:20ch; font-weight:600; }
+  .art { display:grid; place-items:center; position:relative; }
+  .glow { position:absolute; width:430px; height:430px; border-radius:50%; background:radial-gradient(circle, rgba(246,185,59,.42) 0%, rgba(246,185,59,0) 68%); }
+  .art img { width:400px; position:relative; }
+  .foot { position:absolute; left:78px; bottom:44px; display:flex; align-items:center; gap:14px; font-weight:800; font-size:23px; letter-spacing:.4px; }
+  .foot .dot { width:9px; height:9px; border-radius:50%; background:var(--ink); opacity:.35; }
+  .foot .u { color:var(--ink-soft); font-weight:700; }
+</style>
+</head>
+<body>
+  <div class="rays">
+    <svg class="r1" viewBox="0 0 120 120"><g fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round"><path d="M60 8v22M22 22l14 17M98 22 84 39M8 60h22M112 60H90"/></g></svg>
+    <svg class="r2" viewBox="0 0 120 120"><g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"><circle cx="60" cy="60" r="14"/><ellipse cx="60" cy="60" rx="52" ry="21"/><ellipse cx="60" cy="60" rx="52" ry="21" transform="rotate(60 60 60)"/><ellipse cx="60" cy="60" rx="52" ry="21" transform="rotate(120 60 60)"/></g></svg>
+  </div>
+
+  <div class="copy">
+    <div class="eyebrow"><span class="pin"></span> Vaughan, Ontario</div>
+    <h1>Science, made
+      <span class="hl">exciting
+        <svg viewBox="0 0 300 24" preserveAspectRatio="none"><path d="M4 16c48-9 96-12 146-9 46 3 92 9 146 4" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"/></svg>
+      </span>
+    </h1>
+    <p>Student-led tutoring, workshops &amp; unique experiments.</p>
+  </div>
+
+  <div class="art">
+    <div class="glow"></div>
+    <img src="LOGO_SRC" alt="" />
+  </div>
+
+  <div class="foot"><span>brightlabsvaughan.com</span><span class="dot"></span><span class="u">647-339-5448</span></div>
+</body>
+</html>

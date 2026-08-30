@@ -108,6 +108,40 @@ loaded by `next/font/google` in `app/layout.js` and handed to CSS as
 rule through its own `--marker` / `--hand` / `--body`, which is why moving to
 Next changed three lines of the stylesheet and nothing else.
 
+## Social card
+
+`public/assets/og.png` is a designed 1200x630 card, not the app icon. Scrapers
+letterbox a square mark into a 1.91:1 slot, which is a logo floating in grey.
+Regenerate it whenever the wordmark, the tagline or the phone number changes:
+
+```bash
+mkdir -p /tmp/rec && cd /tmp/rec && npm i puppeteer
+NODE_PATH=/tmp/rec/node_modules node scripts/og.js
+```
+
+Puppeteer is deliberately **not** a dependency — it pulls its own Chromium, and
+none of that belongs in the install a deploy has to do. `scripts/og.html` is a
+copy of the hero rather than a screenshot of it: a 1200x630 crop of a page built
+for tall reading always cuts the headline's legs off.
+
+`app/sitemap.js` and `app/robots.js` export `/sitemap.xml` and `/robots.txt`.
+The JSON-LD block in `app/layout.js` is an `EducationalOrganization` carrying
+only facts the client supplied — name, area, email, phone. **No opening hours,
+no price range, no rating**: a fabricated `aggregateRating` is how sites get
+their rich results pulled.
+
+## Keyboard and small screens
+
+- A skip link is the first thing a Tab press finds.
+- `:focus-visible` rings everywhere — the site previously had no focus styles at
+  all, so it could not be navigated from a keyboard.
+- Under 780px the nav collapses into a real disclosure (`components/SiteHeader.js`)
+  that closes on Escape, on a link, and on a tap outside. It used to be
+  `display: none` with nothing in its place, which left three of the five
+  sections unreachable from a phone except by scrolling past them. The CTA
+  collapses with it: bar + wordmark + menu button is three things in a row that
+  only fits two, and at 390px the button sat on top of the word "Labs".
+
 ## Copy
 
 The positioning paragraph in the hero is the client's own wording and should not
@@ -130,6 +164,41 @@ wrong thing and look like the donation had been started. It is a tag with
 rule forwarding to a real mailbox first, or the site will be advertising a
 mailbox nobody reads — **and it has to be changed in both places**, or donations
 go to an inbox nobody is watching.
+
+## The pen
+
+The boxes are not rounded rectangles pretending to be drawn — the outline is
+actually displaced. `components/InkFilters.js` defines two SVG filters:
+`feTurbulence` at a **low** base frequency (a long, slow wander, the way a hand
+drifts along a straight edge) feeding a `feDisplacementMap`. Crank the frequency
+and the same filter reads as fuzz or damage instead of a drawn line, which is
+why those numbers are what they are.
+
+**The filter is on a pseudo-element, never on the box.** Displacing an element
+displaces its text with it, and wobbly body copy is not charming, it is broken.
+So the outline and its offset shadow live on `::before` — a layer with nothing
+in it but the drawn edge — and everything readable sits above it, untouched. Two
+seeds alternate down the page, because a box wobbled identically to the one
+beside it reads as a repeating texture rather than two separate drawings.
+
+Shadow size is a `--lift` custom property per element, so one rule draws every
+box and each box says how far off the page it sits.
+
+## Three properties, three jobs
+
+Every box carries up to three independent movements, and written as `transform`
+each would silently wipe out the last one set. They are split across the three
+individual transform properties instead:
+
+| property     | job                       |
+|--------------|---------------------------|
+| `rotate:`    | the decorative tilt       |
+| `translate:` | the scroll reveal         |
+| `transform:` | the hover / press lift    |
+
+That is why the tilts are `rotate: -1.1deg` and not `transform: rotate(...)`.
+Anything added later that moves a box should pick the free property, not
+overwrite one of these.
 
 ## Reveal on scroll
 
