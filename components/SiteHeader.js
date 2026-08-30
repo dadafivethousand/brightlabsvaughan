@@ -1,11 +1,10 @@
-import BulbMeter from "./BulbMeter";
 import Social from "./Social";
 
 export default function SiteHeader() {
   return (
     <header className="site-head">
       <a className="brand" href="#top">
-        <BulbMeter />
+        <img src="/assets/bulb.png" alt="" />
         <span>Bright Labs</span>
       </a>
 
