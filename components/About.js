@@ -1,20 +1,9 @@
 export default function About() {
   return (
     <section id="about" className="section about">
-      {/* This slot used to hold the bulb again. It holds a photograph now, and
-          swapping rather than adding is the point: a photorealistic bulb a few
-          hundred pixels from the drawn one makes the MARK look like a cartoon
-          of the photo. There is exactly one bulb in this half of the page and
-          it is the mark. */}
-      <figure className="about-photo" data-reveal="left">
-        <img
-          src="/assets/books.jpg"
-          alt="A lit bulb resting on a stack of books"
-          width="1100"
-          height="978"
-          loading="lazy"
-        />
-      </figure>
+      <div className="about-art" aria-hidden="true" data-reveal="left">
+        <img src="/assets/bulb.png" alt="" />
+      </div>
       <div className="about-copy" data-reveal="right" style={{ "--d": "110ms" }}>
         <h2 className="section-title section-title--left">About Bright Labs</h2>
         <p>

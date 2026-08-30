@@ -108,27 +108,6 @@ loaded by `next/font/google` in `app/layout.js` and handed to CSS as
 rule through its own `--marker` / `--hand` / `--body`, which is why moving to
 Next changed three lines of the stylesheet and nothing else.
 
-## The photograph
-
-`public/assets/books.jpg` is a supplied stock photo, cropped and warmed before
-it went in. Two things were done to it and both matter if it is ever replaced:
-
-- **Cropped past the chalkboard.** The original's board carries
-  `NPV = Σ CF/(1+r)^t` and `Ed = %ΔQ/%ΔP` — net present value and price
-  elasticity of demand. That is finance and economics, not science, and the
-  parents most likely to notice are exactly the ones this site is for.
-- **Warmed 55% toward the palette, not 100%.** A full duotone turns it the
-  colour of the buttons and it stops reading as a photograph.
-
-It sits in the About section and **replaced** the bulb that was there, rather
-than joining it. A photorealistic bulb near the drawn one makes the mark look
-like a cartoon of the photo, so there is one bulb in that half of the page and
-it is the mark. Keep any future photo away from the hero for the same reason.
-
-> **Licensing is unverified.** The file arrived as a download; before this stays
-> up, confirm the source permits commercial use. Unsplash and Pexels do; an
-> image search result does not.
-
 ## Credits
 
 The Instagram and Facebook glyphs are [Font Awesome Free](https://fontawesome.com/)
