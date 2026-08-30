@@ -108,6 +108,18 @@ loaded by `next/font/google` in `app/layout.js` and handed to CSS as
 rule through its own `--marker` / `--hand` / `--body`, which is why moving to
 Next changed three lines of the stylesheet and nothing else.
 
+## Credits
+
+The Instagram and Facebook glyphs are [Font Awesome Free](https://fontawesome.com/)
+brand marks, CC BY 4.0, inlined as SVG paths in `components/Social.js` rather
+than loaded from the CDN — one `<svg>` costs nothing, where the CDN would add a
+render-blocking stylesheet and a font file to a site whose whole point is that
+it loads instantly.
+
+They are the only filled icons here, and deliberately so: a brand mark is
+recognised by its silhouette, so outlining one to match the house style makes it
+stop being the mark.
+
 ## Copy
 
 The positioning paragraph in the hero is the client's own wording and should not
