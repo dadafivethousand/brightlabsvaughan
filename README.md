@@ -134,30 +134,70 @@ go to an inbox nobody is watching.
 ## Reveal on scroll
 
 `components/Reveal.js` is one `IntersectionObserver` for the whole page: it
-mounts once, finds every `[data-reveal]` element and adds `is-in` as each
-crosses into view, then stops observing it. Doing it centrally is what keeps
-every section a **server** component — this is the only JavaScript the effect
-ships.
+mounts once, finds every `[data-reveal]` element and adds `is-in` as each comes
+into view. Doing it centrally is what keeps every section a **server**
+component — this is the only JavaScript the effect ships.
 
-Three things about it are load-bearing:
+### An observer alone is not enough
 
-- **The hidden state is scoped to `.js`**, a class an inline script in
-  `app/layout.js` sets while the body is still parsing. Unscoped, a visitor with
-  JavaScript off gets a page of permanently invisible content — the standard way
-  this effect fails. Scoped, the worst case is the static page it was before.
-- **`translate`, not `transform`.** Half the boxes here are already a degree or
-  two off true by their own `transform: rotate()`. A reveal written as
-  `transform: translateY(...)` replaces that rotation, so the cards would
-  straighten themselves out as they arrived — the one thing the pinned-up style
-  exists to avoid. The individual `translate` property composes instead.
-- **`threshold: 0` with a negative bottom `rootMargin`**, not a fractional
-  threshold. Asking for 15% of an element to be visible behaves differently for
-  a small card and for a panel taller than the window; "fire when the top edge
-  crosses 88% of the viewport" behaves the same for both.
+IntersectionObserver reports **crossings**. Move the viewport past an element
+fast enough that no sample catches it intersecting — drag the scrollbar to the
+bottom, press End, follow a link straight to `#contact`, or reload a page the
+browser restores halfway down — and it never fires. The element stays at
+opacity 0 for good, which is a blank hole in the page, not a missed animation.
+So there are two safety nets:
 
-Stagger is a `--d` custom property per element, read by the transition's delay.
-Reduced-motion viewers get everything visible with no transition, in CSS and
-again in the observer.
+1. Anything already **above** the viewport on the first run is shown at once and
+   not animated — the deep-link and restored-scroll case, where animating would
+   be wrong anyway because the visitor never scrolled to it.
+2. A `scroll` listener sweeps whatever the observer has not reached. It is
+   rAF-throttled, passive, only runs while something is pending, and removes
+   itself when the last element lands.
+
+Verified at 0/18 hidden with JS off, under reduced motion, on a `#contact` deep
+link, and under a fast scroll to the bottom.
+
+### Four properties, four jobs
+
+Written as `transform`, the entry slide would wipe out the resting tilt and the
+hover lift would wipe out both. They are split across the individual transform
+properties instead, so all four compose and nothing has to know about the rest:
+
+| property     | job                                              |
+|--------------|--------------------------------------------------|
+| `rotate:`    | resting tilt, and the swing that settles onto it |
+| `translate:` | the entry slide                                  |
+| `scale:`     | the entry pop                                    |
+| `transform:` | left free for hover and press                    |
+
+The resting tilt is a `--tilt` **variable** rather than a literal, because entry
+animates rotation *into* it: a card arrives a few degrees over and settles onto
+its own angle, the way a note does when it is pinned. That only works if the
+resting angle is a number the animation can do arithmetic with.
+
+### The easing is the effect
+
+`ease` arrives and stops dead, which is what makes a reveal read as a fade with
+extra steps. `cubic-bezier(0.16, 1, 0.3, 1)` decelerates hard and long — most of
+the distance goes in the first third, and the last few pixels take as long as
+the first thirty. That is what reads as weight.
+
+The blur does a specific job too: 8px to 0 alongside the move gives a focus
+pull, so an element reads as coming **into** the page rather than sliding across
+a flat surface, and it covers the frame where a half-opacity element just looks
+like a rendering fault.
+
+### Four ways in
+
+Assigned by what the element *is*, because a page where everything rises by the
+same amount has one idea in it. `pin` / `pin-r` swing into place (the cards, the
+value notes, the two contact cards); `left` / `right` come from their own column
+(the band copy, the about pair); `pop` grows rather than travels (the hero
+mark). Stagger is a `--d` custom property per element.
+
+The hero underline draws itself as the headline lands — one stroke in one
+direction, because a highlight that fades up as a whole looks printed, and that
+word is meant to look written.
 
 ## Buttons do not wrap
 

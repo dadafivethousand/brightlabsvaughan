@@ -311,7 +311,12 @@ h1 {
 
 @media (max-width: 880px) { .cards { grid-template-columns: 1fr; } }
 
+/* The tilt is a VARIABLE now, not a transform. Entry animates rotation into it
+   — a card arrives a few degrees over and settles onto its resting angle, the
+   way a note does when it is pinned — and that only works if the resting angle
+   is a number the animation can do arithmetic with. */
 .card {
+  rotate: var(--tilt, 0deg);
   background: var(--paper-2);
   border: var(--draw) solid var(--ink);
   border-radius: var(--box);
@@ -320,8 +325,8 @@ h1 {
 }
 
 /* Alternating, so the row reads as pinned up rather than laid out on a grid. */
-.card--tilt-l { transform: rotate(-1.1deg); }
-.card--tilt-r { transform: rotate(1.3deg); }
+.card--tilt-l { --tilt: -1.1deg; }
+.card--tilt-r { --tilt: 1.3deg; }
 
 .card-icon {
   width: 62px;
@@ -388,6 +393,7 @@ h1 {
 .values { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
 
 .values li {
+  rotate: var(--tilt, 0deg);
   background: var(--paper);
   border: var(--draw) solid var(--ink);
   border-radius: var(--box);
@@ -397,8 +403,8 @@ h1 {
   box-shadow: 5px 5px 0 var(--ink);
 }
 
-.values li:nth-child(even) { transform: rotate(0.9deg); }
-.values li:nth-child(odd) { transform: rotate(-0.7deg); }
+.values li:nth-child(even) { --tilt: 0.9deg; }
+.values li:nth-child(odd) { --tilt: -0.7deg; }
 
 .values span {
   display: block;
@@ -438,7 +444,8 @@ h1 {
   box-shadow: 9px 10px 0 var(--ink);
   padding: 56px 34px 48px;
   text-align: center;
-  transform: rotate(-0.6deg);
+  --tilt: -0.6deg;
+  rotate: var(--tilt);
 }
 
 .contact-box h2 {
@@ -478,7 +485,8 @@ h1 {
   box-shadow: 6px 7px 0 var(--ink);
   padding: 30px 28px 26px;
   text-align: center;
-  transform: rotate(0.7deg);
+  --tilt: 0.7deg;
+  rotate: var(--tilt);
 }
 
 .support-box h3 {
@@ -541,28 +549,86 @@ h1 {
  * invisible content, which is the standard way this effect fails. With the
  * scope, the worst case is simply the static page it was before.
  *
- * `translate`, NOT `transform`. Half the boxes here are already a degree or two
- * off true by their own `transform: rotate()`, and a reveal written as
- * `transform: translateY(...)` REPLACES that rotation — the cards would
- * straighten themselves out as they arrived, which is the one thing the whole
- * pinned-up style is built to avoid. The individual `translate` property
- * composes with `transform` instead of overwriting it.
+ * FOUR PROPERTIES, FOUR JOBS, NONE OVERWRITING ANOTHER. Written as `transform`,
+ * the entry slide would wipe out the resting tilt and the hover lift would wipe
+ * out both. They are split across the individual transform properties instead:
  *
- * The distance is small on purpose. This is a lab notebook, not a deck: things
- * settle onto the page, they do not fly across it.
+ *     rotate:     resting tilt, and the swing that settles onto it
+ *     translate:  the entry slide
+ *     scale:      the entry pop
+ *     transform:  left free for hover and press
+ *
+ * THE EASING IS THE WHOLE EFFECT. `ease` arrives at its destination and stops
+ * dead, which is what made the first version feel like a fade with extra steps.
+ * The curve below decelerates hard and long — most of the distance is covered
+ * in the first third, and the last few pixels take as long as the first thirty.
+ * That is what reads as weight: paper settling rather than a div appearing.
+ *
+ * The blur is small and does a specific job. Going from 8px to 0 alongside the
+ * move gives the eye a focus pull, so a card reads as coming INTO the page
+ * rather than sliding across a flat surface — and it hides the one frame where
+ * a half-opacity element looks like a rendering mistake.
  */
 .js [data-reveal] {
+  --fall: 26px;
+  --shift: 0px;
+  --swing: 0deg;
+  --pop: 1;
+
   opacity: 0;
-  translate: 0 22px;
+  translate: var(--shift) var(--fall);
+  rotate: calc(var(--tilt, 0deg) + var(--swing));
+  scale: var(--pop);
+  filter: blur(8px);
   transition:
-    opacity 0.55s ease,
-    translate 0.6s cubic-bezier(0.22, 0.9, 0.3, 1);
+    opacity 0.5s linear,
+    translate 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    rotate 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    scale 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.55s ease-out;
   transition-delay: var(--d, 0ms);
 }
 
 .js [data-reveal].is-in {
   opacity: 1;
-  translate: none;
+  translate: 0 0;
+  rotate: var(--tilt, 0deg);
+  scale: 1;
+  filter: blur(0);
+}
+
+/* ---------- the four ways in ----------
+ * A page where every element rises by the same amount is a page with one idea
+ * in it. These are assigned by what the element IS: things that are pinned up
+ * swing into place, things beside a column come from that column's side, and
+ * the single hero object grows rather than travels. */
+
+/* pinned: arrives over-rotated and settles onto its own resting angle */
+.js [data-reveal="pin"] { --swing: -4.5deg; --fall: 30px; }
+.js [data-reveal="pin-r"] { --swing: 4deg; --fall: 30px; }
+
+/* from the side, for anything that sits in a two-column band */
+.js [data-reveal="left"] { --shift: -38px; --fall: 10px; }
+.js [data-reveal="right"] { --shift: 38px; --fall: 10px; }
+
+/* the one object that grows instead of travelling */
+.js [data-reveal="pop"] { --pop: 0.9; --fall: 14px; }
+
+/* The underline draws itself as the headline lands. One stroke, one direction,
+   which is how it was made — a highlight that fades up as a whole looks
+   printed, and this word is meant to look written. Scoped to `.js` with the
+   rest of the reveal, so with no script it is simply already drawn. */
+.js .scribble path {
+  stroke-dasharray: 340;
+  stroke-dashoffset: 340;
+}
+
+.js h1.is-in .scribble path {
+  animation: fw-draw 0.85s 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fw-draw {
+  to { stroke-dashoffset: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -571,5 +637,14 @@ h1 {
 
   /* The observer also short-circuits in JS, but this makes the page correct
      even in the frame before it runs. */
-  .js [data-reveal] { opacity: 1; translate: none; transition: none; }
+  .js [data-reveal] {
+    opacity: 1;
+    translate: none;
+    rotate: var(--tilt, 0deg);
+    scale: 1;
+    filter: none;
+    transition: none;
+  }
+
+  .js .scribble path { stroke-dashoffset: 0; }
 }

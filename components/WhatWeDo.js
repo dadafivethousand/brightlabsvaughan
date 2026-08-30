@@ -51,8 +51,8 @@ const CARDS = [
 export default function WhatWeDo() {
   return (
     <section id="what" className="section">
-      <h2 className="section-title" data-reveal>What we do</h2>
-      <p className="section-sub" data-reveal style={{ "--d": "70ms" }}>
+      <h2 className="section-title" data-reveal="up">What we do</h2>
+      <p className="section-sub" data-reveal="up" style={{ "--d": "80ms" }}>
         Three ways into the same idea — that science is a thing you get to <em>do</em>.
       </p>
 
@@ -63,8 +63,8 @@ export default function WhatWeDo() {
           <article
             className={`card ${c.tilt}`}
             key={c.key}
-            data-reveal
-            style={{ "--d": `${90 + i * 90}ms` }}
+            data-reveal={c.tilt === "card--tilt-r" ? "pin-r" : "pin"}
+            style={{ "--d": `${110 + i * 95}ms` }}
           >
             <div className="card-icon">
               <svg viewBox="0 0 64 64">{c.icon}</svg>

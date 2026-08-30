@@ -1,10 +1,10 @@
 export default function About() {
   return (
     <section id="about" className="section about">
-      <div className="about-art" aria-hidden="true" data-reveal>
+      <div className="about-art" aria-hidden="true" data-reveal="left">
         <img src="/assets/bulb.png" alt="" />
       </div>
-      <div className="about-copy" data-reveal style={{ "--d": "90ms" }}>
+      <div className="about-copy" data-reveal="right" style={{ "--d": "110ms" }}>
         <h2 className="section-title section-title--left">About Bright Labs</h2>
         <p>
           We are a student-led tutoring and education organization based in

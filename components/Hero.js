@@ -2,8 +2,8 @@ export default function Hero() {
   return (
     <section className="hero">
       <div className="hero-copy">
-        <p className="eyebrow" data-reveal><span className="pin"></span> Vaughan, Ontario</p>
-        <h1 data-reveal style={{ "--d": "70ms" }}>
+        <p className="eyebrow" data-reveal="up"><span className="pin"></span> Vaughan, Ontario</p>
+        <h1 data-reveal="up" style={{ "--d": "90ms" }}>
           Science, made{" "}
           <span className="hl">
             exciting
@@ -20,20 +20,20 @@ export default function Hero() {
         </h1>
         {/* THE CLIENT'S OWN WORDING. Not house copy — see the README. Do not
             rewrite this paragraph without asking. */}
-        <p className="lede" data-reveal style={{ "--d": "140ms" }}>
+        <p className="lede" data-reveal="up" style={{ "--d": "240ms" }}>
           Bright Labs is a <strong>student-led tutoring and education organization</strong>{" "}
           dedicated to making science exciting, accessible and inspiring for young
           learners. We introduce students to intriguing scientific topics, spark
           curiosity, and foster a love for STEM through tutoring, workshops and
           unique experiments.
         </p>
-        <div className="cta-row" data-reveal style={{ "--d": "210ms" }}>
+        <div className="cta-row" data-reveal="up" style={{ "--d": "350ms" }}>
           <a className="btn" href="#contact">Get in touch</a>
           <a className="btn btn--ghost" href="#what">See what we do</a>
         </div>
       </div>
 
-      <div className="hero-art" data-reveal style={{ "--d": "140ms" }}>
+      <div className="hero-art" data-reveal="pop" style={{ "--d": "180ms" }}>
         <div className="glow" aria-hidden="true"></div>
         <img src="/assets/brightlabs-logo.png" alt="Bright Labs" />
       </div>

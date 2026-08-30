@@ -8,7 +8,7 @@ export default function StudentLed() {
   return (
     <section id="student-led" className="section band">
       <div className="band-inner">
-        <div className="band-copy" data-reveal>
+        <div className="band-copy" data-reveal="left">
           <h2>Student-led,<br />on purpose.</h2>
           <p>
             Bright Labs is run by students. That is not a footnote — it is the
@@ -21,7 +21,11 @@ export default function StudentLed() {
 
         <ul className="values">
           {VALUES.map(([term, line], i) => (
-            <li key={term} data-reveal style={{ "--d": `${80 + i * 90}ms` }}>
+            <li
+              key={term}
+              data-reveal={i % 2 ? "pin-r" : "pin"}
+              style={{ "--d": `${110 + i * 95}ms` }}
+            >
               <span>{term}</span> {line}
             </li>
           ))}

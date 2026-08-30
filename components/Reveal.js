@@ -5,29 +5,37 @@ import { useEffect } from "react";
 /* One observer for the whole page.
  *
  * Mounted once and rendering nothing, it finds every `[data-reveal]` element
- * and adds `is-in` as each crosses into view. Doing it this way — rather than
- * making each section a client component with its own hook — keeps every
- * section of the site a server component: the markup is still generated at
- * build time and this is the only JavaScript that ships for the effect.
+ * and adds `is-in` as each comes into view. Doing it centrally is what keeps
+ * every section of the site a server component: the markup is still generated
+ * at build time and this is the only JavaScript the effect ships.
  *
- * `threshold: 0` with a negative bottom `rootMargin`, NOT a fractional
- * threshold. A threshold of 0.15 asks for 15% of the element to be visible,
- * which an element taller than the viewport can satisfy late or — for the
- * yellow band on a short window — never quite satisfy at the moment you want
- * it to. Zero plus a margin means "fire when the top edge crosses 88% of the
- * window", which behaves the same for a small card and a tall panel.
+ * ── WHY AN OBSERVER ALONE IS NOT ENOUGH ──
  *
- * Elements already on screen at load are intersecting the moment they are
- * observed, so the observer fires for them immediately and the top of the page
- * animates in on arrival rather than sitting blank.
+ * IntersectionObserver reports CROSSINGS. Move the viewport past an element
+ * fast enough that no sample ever catches it intersecting — drag the scrollbar
+ * to the bottom, press End, follow a link straight to #contact, or reload a
+ * page the browser restores halfway down — and the observer never fires for it.
+ * The element is left at opacity 0 permanently, which is a blank hole in the
+ * page rather than a missed animation.
+ *
+ * So the observer is the primary path and there are two safety nets:
+ *
+ *   1. Anything already ABOVE the viewport on the first run is shown at once,
+ *      without animating. That is the deep-link and restored-scroll case, and
+ *      animating it would be wrong anyway — the visitor did not scroll to it.
+ *   2. A scroll listener sweeps whatever the observer has not reached yet. It
+ *      is rAF-throttled, passive, only runs while something is still pending,
+ *      and removes itself the moment the last element lands. That bounds the
+ *      cost at "a handful of frames during one scroll" and is the difference
+ *      between an effect that works and one that works if you scroll politely.
  */
 export default function Reveal() {
   useEffect(() => {
-    const els = document.querySelectorAll("[data-reveal]");
+    const els = Array.from(document.querySelectorAll("[data-reveal]"));
     if (!els.length) return undefined;
 
     // No observer, or a viewer who has asked for less motion: show everything
-    // at once and do not observe anything.
+    // at once and never observe anything.
     const still =
       typeof IntersectionObserver === "undefined" ||
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -37,21 +45,61 @@ export default function Reveal() {
       return undefined;
     }
 
+    const pending = new Set(els);
+    let frame = 0;
+
+    const show = (el) => {
+      el.classList.add("is-in");
+      pending.delete(el);
+      io.unobserve(el);
+      if (!pending.size) teardown();
+    };
+
     const io = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-          entry.target.classList.add("is-in");
-          // Once in, stay in. Re-animating on the way back up turns a page
-          // into a slideshow and makes the whole site feel unfinished.
-          io.unobserve(entry.target);
+          // Once in, stay in. Re-animating on the way back up turns a page into
+          // a slideshow and makes the whole site feel unfinished.
+          if (entry.isIntersecting) show(entry.target);
         }
       },
       { threshold: 0, rootMargin: "0px 0px -12% 0px" }
     );
 
-    els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
+    // The sweep. Same trigger line as the observer's rootMargin, so an element
+    // caught here lands at the point it would have anyway.
+    const sweep = () => {
+      frame = 0;
+      const line = window.innerHeight * 0.88;
+      for (const el of Array.from(pending)) {
+        if (el.getBoundingClientRect().top < line) show(el);
+      }
+    };
+
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(sweep);
+    };
+
+    function teardown() {
+      io.disconnect();
+      window.removeEventListener("scroll", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+      frame = 0;
+    }
+
+    for (const el of els) {
+      // Already scrolled past before the script ran: show it, do not animate it.
+      if (el.getBoundingClientRect().bottom < 0) {
+        el.classList.add("is-in");
+        pending.delete(el);
+        continue;
+      }
+      io.observe(el);
+    }
+
+    if (!pending.size) return undefined;
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return teardown;
   }, []);
 
   return null;

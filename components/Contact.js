@@ -13,7 +13,7 @@ const PHONE_TEL = "+16473395448";
 export default function Contact() {
   return (
     <section id="contact" className="section contact">
-      <div className="contact-box" data-reveal>
+      <div className="contact-box" data-reveal="pin">
         <h2>Let&apos;s talk</h2>
         <p>
           Questions about tutoring, workshops, or bringing Bright Labs to your
@@ -29,7 +29,7 @@ export default function Contact() {
       {/* Pinned the other way, and quieter than the card above it — asking for
           money is not the point of the page and should not be the loudest
           thing on it. */}
-      <div className="support-box" data-reveal style={{ "--d": "110ms" }}>
+      <div className="support-box" data-reveal="pin-r" style={{ "--d": "140ms" }}>
         <h3>Support Bright Labs</h3>
         <p>
           Bright Labs is student-run. If you would like to support the work,
