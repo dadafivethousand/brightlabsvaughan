@@ -432,7 +432,9 @@ h1 {
 
 .about {
   display: grid;
-  grid-template-columns: 0.75fr 1.25fr;
+  /* Was 0.75fr for a small bulb. A photograph needs the column back, or it
+     comes out as a postage stamp beside three paragraphs. */
+  grid-template-columns: 0.95fr 1.05fr;
   gap: 56px;
   align-items: center;
 }
@@ -443,6 +445,33 @@ h1 {
 }
 
 .about-art img { transform: rotate(5deg); }
+
+/* A photograph, taped into the notebook.
+ *
+ * A bare rectangle of photo on this page is the one element not drawn in the
+ * site's pen, and it shows. The white margin, the drawn edge, the hard offset
+ * shadow and the degree and a half of tilt are the same treatment every card
+ * here gets — so the photo arrives as something pinned to the page rather than
+ * as a window cut through it.
+ *
+ * The file is already cropped past the chalkboard and warmed 55% toward the
+ * palette; see the note in the README before replacing it. */
+.about-photo {
+  margin: 0;
+  padding: 12px 12px 14px;
+  background: #fff;
+  border: var(--draw) solid var(--ink);
+  border-radius: var(--box);
+  box-shadow: 8px 9px 0 var(--ink);
+  transform: rotate(-1.5deg);
+}
+
+.about-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: calc(var(--draw) * 2);
+}
 
 .about-copy p { color: var(--ink-soft); margin: 0 0 16px; }
 
