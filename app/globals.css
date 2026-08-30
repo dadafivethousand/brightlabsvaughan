@@ -26,28 +26,6 @@
   --rule: rgba(34, 32, 29, 0.055);
 
   --draw: 3px;
-
-  /* ONE SPACING SCALE, so a section, a card and a gap cannot each invent their
-     own number. Everything vertical below is a step on this. */
-  --s-1: 8px;
-  --s-2: 14px;
-  --s-3: 22px;
-  --s-4: 34px;
-  --s-5: 52px;
-  --s-6: 78px;
-  --s-7: clamp(64px, 9vw, 116px);
-
-  /* Fluid type. The floor is the phone, the ceiling is a laptop; nothing in
-     between is a breakpoint anyone has to maintain. */
-  --t-body: clamp(16.5px, 0.32vw + 15.4px, 18px);
-  --t-lede: clamp(18px, 0.7vw + 16px, 21px);
-  --t-display: clamp(44px, 6.6vw, 84px);
-  --t-h2: clamp(32px, 4.2vw, 50px);
-  --t-h3: clamp(21px, 1.4vw + 17px, 25px);
-  --t-hand: clamp(20px, 1.2vw + 17px, 25px);
-
-  --measure: 66ch;
-  --ease: cubic-bezier(0.22, 0.9, 0.3, 1);
   /* The three faces come from `next/font/google` in app/layout.js, which
      self-hosts them and hands each one down as a CSS variable. Nothing else in
      this file changed when the site moved to Next: every rule below already
@@ -71,8 +49,8 @@ html { scroll-behavior: smooth; }
 body {
   margin: 0;
   font-family: var(--body);
-  font-size: var(--t-body);
-  line-height: 1.62;
+  font-size: 18px;
+  line-height: 1.65;
   color: var(--ink);
   background-color: var(--paper);
   /* graph rule — a lab notebook, not a web page */
@@ -85,107 +63,6 @@ body {
 
 img { max-width: 100%; display: block; }
 
-/* ---------- reading ----------
- * `balance` on headings puts the line breaks where a typesetter would rather
- * than where the box happens to end — no widowed single word under a display
- * line. `pretty` does the narrower job on body copy: it only prevents the last
- * line being one orphaned word, without reflowing the whole paragraph.
- * Unsupported browsers ignore both and get exactly what they got before. */
-h1, h2, h3, .section-sub { text-wrap: balance; }
-p { text-wrap: pretty; }
-
-/* ---------- focus ----------
- * `:focus-visible`, not `:focus`, so a mouse click on a button does not leave a
- * ring behind but a Tab key does. The site had neither, which meant the whole
- * page was unusable from a keyboard: nothing indicated where you were. */
-:focus-visible {
-  outline: var(--draw) solid var(--orange);
-  outline-offset: 4px;
-  border-radius: 3px;
-}
-
-/* Sent off-screen until it is focused, which is the first thing a Tab press
-   finds — a keyboard user should not have to walk the whole nav to reach the
-   content. */
-.skip {
-  position: absolute;
-  left: var(--s-3);
-  top: var(--s-3);
-  z-index: 100;
-  padding: 10px 18px;
-  background: var(--yellow);
-  border: var(--draw) solid var(--ink);
-  border-radius: var(--box);
-  font-weight: 800;
-  color: var(--ink);
-  text-decoration: none;
-  transform: translateY(calc(-100% - var(--s-5)));
-}
-
-.skip:focus-visible { transform: translateY(0); }
-
-/* ---------- the pen ----------
- * A real wobble, not a rounded rectangle pretending to be one.
- *
- * `feTurbulence` at a LOW frequency is a long, slow wander — the way a hand
- * drifts across a straight edge — and `feDisplacementMap` pushes the outline
- * along it. At a high frequency the same filter reads as fuzz or damage, which
- * is why the numbers in the SVG are what they are.
- *
- * IT IS APPLIED TO A PSEUDO-ELEMENT, NEVER TO THE BOX. Displacing an element
- * displaces its text too, and wobbly body copy is not charming, it is broken.
- * So the outline and its offset shadow move onto `::before` — one layer with
- * nothing in it but the drawn edge — and everything readable sits above,
- * untouched.
- */
-.inked,
-.btn,
-.card,
-.card-icon,
-.band-inner,
-.values li,
-.contact-box,
-.support-box,
-.etransfer { position: relative; }
-
-.inked::before,
-.btn::before,
-.card::before,
-.card-icon::before,
-.band-inner::before,
-.values li::before,
-.contact-box::before,
-.support-box::before,
-.etransfer::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border: var(--draw) solid var(--ink);
-  border-radius: inherit;
-  box-shadow: var(--lift, 7px 8px 0 var(--ink));
-  filter: url(#ink);
-  pointer-events: none;
-  transition: box-shadow 0.16s var(--ease);
-}
-
-/* A second seed, so a card and the card beside it are not wobbled identically
-   — two boxes with the same distortion read as a texture, not as two drawings. */
-.card--tilt-r::before,
-.values li:nth-child(even)::before,
-.support-box::before { filter: url(#ink-b); }
-
-@supports not (filter: url(#ink)) {
-  .inked::before,
-  .btn::before,
-  .card::before,
-  .card-icon::before,
-  .band-inner::before,
-  .values li::before,
-  .contact-box::before,
-  .support-box::before,
-  .etransfer::before { filter: none; }
-}
-
 /* ---------- wallpaper doodles ---------- */
 
 .doodles {
@@ -197,10 +74,10 @@ p { text-wrap: pretty; }
 }
 
 .doodle { position: absolute; opacity: 0.3; }
-.doodle--a { top: 12vh; left: 4vw; width: 74px; rotate: -12deg; }
-.doodle--b { top: 52vh; right: 3vw; width: 108px; opacity: 0.16; color: var(--ink); rotate: 9deg; }
-.doodle--c { bottom: 8vh; left: 7vw; width: 84px; opacity: 0.14; color: var(--ink); rotate: 7deg; }
-.doodle--d { top: 34vh; right: 12vw; width: 54px; rotate: 18deg; }
+.doodle--a { top: 12vh; left: 4vw; width: 74px; transform: rotate(-12deg); }
+.doodle--b { top: 52vh; right: 3vw; width: 108px; opacity: 0.16; color: var(--ink); transform: rotate(9deg); }
+.doodle--c { bottom: 8vh; left: 7vw; width: 84px; opacity: 0.14; color: var(--ink); transform: rotate(7deg); }
+.doodle--d { top: 34vh; right: 12vw; width: 54px; transform: rotate(18deg); }
 
 @media (max-width: 900px) { .doodle { display: none; } }
 
@@ -210,28 +87,14 @@ p { text-wrap: pretty; }
 main,
 .site-foot { position: relative; z-index: 1; }
 
-/* Sticky, because the only conversion on the page lives in it. The paper is
-   translucent with a blur behind it so the graph rule and the doodles keep
-   scrolling underneath rather than sliding under an opaque bar — the page
-   still reads as one continuous sheet. */
-.site-head-outer {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  background: rgba(255, 252, 243, 0.82);
-  backdrop-filter: saturate(1.4) blur(10px);
-  -webkit-backdrop-filter: saturate(1.4) blur(10px);
-  border-bottom: 2px dashed rgba(34, 32, 29, 0.16);
-}
-
 .site-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--s-3);
+  gap: 24px;
   max-width: 1140px;
   margin: 0 auto;
-  padding: 16px 28px;
+  padding: 22px 28px;
 }
 
 .brand {
@@ -242,7 +105,7 @@ main,
   color: var(--ink);
 }
 
-.brand img { width: 40px; rotate: -6deg; }
+.brand img { width: 40px; transform: rotate(-6deg); }
 
 .brand span {
   font-family: var(--marker);
@@ -264,99 +127,8 @@ main,
 
 .nav a:not(.btn):hover { color: var(--orange); }
 
-/* ---------- the small-screen menu ----------
- * The links used to be `display: none` under 780px with nothing put in their
- * place — three of the page's five sections were unreachable from a phone
- * except by scrolling past them. This is a disclosure: a drawn button that
- * opens a panel, and closes on Escape, on a link, or on a tap outside. */
-.menu-btn {
-  display: none;
-  width: 46px;
-  height: 42px;
-  padding: 0;
-  background: transparent;
-  border: 0;
-  cursor: pointer;
-  color: var(--ink);
-}
-
-.menu-btn svg { width: 30px; height: 24px; margin: 0 auto; }
-
-.menu-btn svg path {
-  transition: transform 0.24s var(--ease), opacity 0.16s linear;
-  transform-origin: center;
-}
-
-.menu-btn[aria-expanded="true"] svg path:nth-child(1) { transform: translateY(8px) rotate(42deg); }
-.menu-btn[aria-expanded="true"] svg path:nth-child(2) { opacity: 0; }
-.menu-btn[aria-expanded="true"] svg path:nth-child(3) { transform: translateY(-8px) rotate(-42deg); }
-
-.menu-panel { display: none; }
-
 @media (max-width: 780px) {
-  /* The whole nav collapses, CTA INCLUDED. Keeping "Get in touch" in the bar
-     alongside the wordmark and a menu button put three things in a row that
-     only fits two: at 390px the button sat on top of the word "Labs". The call
-     to action is the first thing in the panel instead, where it has room to be
-     a button rather than a squeezed chip — and the hero repeats it a screen
-     below anyway. */
   .nav a:not(.btn) { display: none; }
-  .nav > .btn { display: none; }
-  .menu-btn { display: block; }
-
-  /* Collapsed with a 0fr grid row rather than `display: none`, which cannot be
-     transitioned. `visibility` is what actually takes the links out of the tab
-     order and the accessibility tree while it is shut — a panel at zero height
-     is still focusable without it. */
-  .menu-panel {
-    display: grid;
-    grid-template-rows: 0fr;
-    max-width: 1140px;
-    margin: 0 auto;
-    padding: 0 28px;
-    opacity: 0;
-    visibility: hidden;
-    transition:
-      grid-template-rows 0.3s var(--ease),
-      opacity 0.2s linear,
-      visibility 0s linear 0.3s;
-  }
-
-  .menu-panel[data-open="true"] {
-    grid-template-rows: 1fr;
-    opacity: 1;
-    visibility: visible;
-    transition: grid-template-rows 0.3s var(--ease), opacity 0.2s linear, visibility 0s;
-  }
-
-  .menu-inner {
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .menu-inner a {
-    padding: 15px 4px;
-    font-family: var(--marker);
-    font-weight: 400;
-    font-size: 24px;
-    color: var(--ink);
-    text-decoration: none;
-    border-bottom: 2px dashed rgba(34, 32, 29, 0.16);
-  }
-
-  .menu-inner a:last-child { border-bottom: 0; }
-
-  /* The CTA is a button again down here, not another line of the list. */
-  .menu-inner .btn {
-    align-self: flex-start;
-    margin: 20px 0 24px;
-    padding: 13px 24px;
-    font-family: var(--body);
-    font-weight: 800;
-    font-size: 16px;
-    border-bottom: 0;
-  }
 }
 
 /* Below this the head is a mark and a button and nothing else, and the two of
@@ -380,10 +152,11 @@ main,
   text-decoration: none;
   color: var(--ink);
   background: var(--yellow);
+  border: var(--draw) solid var(--ink);
   border-radius: var(--box);
   padding: 13px 26px;
-  --lift: 5px 6px 0 var(--ink);
-  transition: transform 0.12s ease;
+  box-shadow: 5px 6px 0 var(--ink);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
   /* A DRAWN BOX CANNOT REFLOW. Every button here is a pen outline with a hard
      offset shadow behind it, and the outline is sized by the text — so when
      "Get in touch" broke across two lines in the narrow header, the box grew
@@ -395,11 +168,8 @@ main,
   white-space: nowrap;
 }
 
-.btn:hover { transform: translate(2px, 3px); }
-.btn:hover::before { box-shadow: 2px 3px 0 var(--ink); }
-.btn:active { transform: translate(4px, 5px); }
-.btn:active::before { box-shadow: 1px 1px 0 var(--ink); }
-.btn--sm { padding: 9px 18px; font-size: 15px; --lift: 4px 4px 0 var(--ink); }
+.btn:hover { transform: translate(2px, 3px); box-shadow: 2px 3px 0 var(--ink); }
+.btn--sm { padding: 9px 18px; font-size: 15px; box-shadow: 4px 4px 0 var(--ink); }
 /* The email is 27 characters and is the one label that cannot be shortened, so
    it scales with the viewport instead of wrapping — `word-break: break-word`
    used to split it as "brightlabsvaughan@g / mail.com", which is a worse thing
@@ -484,7 +254,7 @@ h1 {
 
 .hero-art img {
   width: min(430px, 100%);
-  rotate: -3deg;
+  transform: rotate(-3deg);
   position: relative;
   z-index: 1;
 }
@@ -541,26 +311,19 @@ h1 {
 
 @media (max-width: 880px) { .cards { grid-template-columns: 1fr; } }
 
-/* The lift is `transform`, the tilt is `rotate`, the reveal is `translate`.
-   Three properties, three jobs, none of them overwriting another — which is
-   the whole reason the decorative rotations stopped being transforms. */
 .card {
   background: var(--paper-2);
+  border: var(--draw) solid var(--ink);
   border-radius: var(--box);
-  --lift: 7px 8px 0 var(--ink);
+  box-shadow: 7px 8px 0 var(--ink);
   padding: 32px 28px 30px;
-  transition: transform 0.22s var(--ease);
 }
 
-.card:hover { transform: translateY(-6px); }
-.card:hover::before { box-shadow: 11px 13px 0 var(--ink); }
-
 /* Alternating, so the row reads as pinned up rather than laid out on a grid. */
-.card--tilt-l { rotate: -1.1deg; }
-.card--tilt-r { rotate: 1.3deg; }
+.card--tilt-l { transform: rotate(-1.1deg); }
+.card--tilt-r { transform: rotate(1.3deg); }
 
 .card-icon {
-  --lift: 4px 5px 0 var(--ink);
   width: 62px;
   height: 62px;
   margin-bottom: 18px;
@@ -568,6 +331,7 @@ h1 {
   place-items: center;
   color: var(--ink);
   background: var(--yellow);
+  border: var(--draw) solid var(--ink);
   border-radius: var(--box-alt);
 }
 
@@ -589,8 +353,9 @@ h1 {
 
 .band-inner {
   background: var(--yellow);
+  border: var(--draw) solid var(--ink);
   border-radius: var(--box-alt);
-  --lift: 9px 10px 0 var(--ink);
+  box-shadow: 9px 10px 0 var(--ink);
   padding: 54px 48px;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -616,7 +381,7 @@ h1 {
   font-family: var(--hand);
   font-size: 27px;
   font-weight: 700;
-  rotate: -1.4deg;
+  transform: rotate(-1.4deg);
   display: inline-block;
 }
 
@@ -624,15 +389,16 @@ h1 {
 
 .values li {
   background: var(--paper);
+  border: var(--draw) solid var(--ink);
   border-radius: var(--box);
   padding: 18px 22px;
   font-size: 16.5px;
   color: var(--ink-soft);
-  --lift: 5px 5px 0 var(--ink);
+  box-shadow: 5px 5px 0 var(--ink);
 }
 
-.values li:nth-child(even) { rotate: 0.9deg; }
-.values li:nth-child(odd) { rotate: -0.7deg; }
+.values li:nth-child(even) { transform: rotate(0.9deg); }
+.values li:nth-child(odd) { transform: rotate(-0.7deg); }
 
 .values span {
   display: block;
@@ -657,7 +423,7 @@ h1 {
   .about-art { max-width: 220px; }
 }
 
-.about-art img { rotate: 5deg; }
+.about-art img { transform: rotate(5deg); }
 
 .about-copy p { color: var(--ink-soft); margin: 0 0 16px; }
 
@@ -667,11 +433,12 @@ h1 {
 
 .contact-box {
   background: var(--paper-2);
+  border: var(--draw) solid var(--ink);
   border-radius: var(--box);
-  --lift: 9px 10px 0 var(--ink);
+  box-shadow: 9px 10px 0 var(--ink);
   padding: 56px 34px 48px;
   text-align: center;
-  rotate: -0.6deg;
+  transform: rotate(-0.6deg);
 }
 
 .contact-box h2 {
@@ -706,11 +473,12 @@ h1 {
   margin: 30px auto 0;
   max-width: 620px;
   background: var(--paper);
+  border: var(--draw) solid var(--ink);
   border-radius: var(--box-alt);
-  --lift: 6px 7px 0 var(--ink);
+  box-shadow: 6px 7px 0 var(--ink);
   padding: 30px 28px 26px;
   text-align: center;
-  rotate: 0.7deg;
+  transform: rotate(0.7deg);
 }
 
 .support-box h3 {
@@ -733,9 +501,10 @@ h1 {
   font-size: clamp(14px, 4.2vw, 18px);
   color: var(--ink);
   background: var(--yellow-soft);
+  border: var(--draw) solid var(--ink);
   border-radius: var(--box);
   padding: 11px clamp(14px, 4.4vw, 22px);
-  --lift: 4px 5px 0 var(--ink);
+  box-shadow: 4px 5px 0 var(--ink);
   user-select: all;
   white-space: nowrap;
 }
@@ -760,7 +529,7 @@ h1 {
   margin-top: 40px;
 }
 
-.site-foot img { width: 40px; margin: 0 auto 12px; rotate: 4deg; }
+.site-foot img { width: 40px; margin: 0 auto 12px; transform: rotate(4deg); }
 .site-foot p { margin: 0; font-size: 15px; color: var(--ink-soft); }
 .foot-tag { font-family: var(--hand); font-size: 21px; margin-top: 4px !important; }
 
@@ -772,16 +541,12 @@ h1 {
  * invisible content, which is the standard way this effect fails. With the
  * scope, the worst case is simply the static page it was before.
  *
- * `translate`, NOT `transform`. Every box here carries up to three independent
- * movements — a decorative tilt, this reveal, and a hover lift — and written as
- * `transform` each one would wipe out the last. They are split across the three
- * individual properties instead:
- *
- *     rotate:     the tilt       (static, per element)
- *     translate:  this reveal    (once, on entry)
- *     transform:  the hover lift (interactive)
- *
- * so all three compose and none has to know about the others.
+ * `translate`, NOT `transform`. Half the boxes here are already a degree or two
+ * off true by their own `transform: rotate()`, and a reveal written as
+ * `transform: translateY(...)` REPLACES that rotation — the cards would
+ * straighten themselves out as they arrived, which is the one thing the whole
+ * pinned-up style is built to avoid. The individual `translate` property
+ * composes with `transform` instead of overwriting it.
  *
  * The distance is small on purpose. This is a lab notebook, not a deck: things
  * settle onto the page, they do not fly across it.
@@ -800,27 +565,8 @@ h1 {
   translate: none;
 }
 
-/* The underline draws itself once, as the headline arrives. One stroke in one
-   direction, which is how it would have been made — a highlight that fades up
-   as a whole looks printed, and this word is meant to look written. Scoped to
-   `.js` with the rest of the reveal, so with no script it is already drawn. */
-.js .scribble path {
-  stroke-dasharray: 340;
-  stroke-dashoffset: 340;
-}
-
-.js h1.is-in .scribble path {
-  animation: fw-draw 0.9s 0.3s var(--ease) forwards;
-}
-
-@keyframes fw-draw {
-  to { stroke-dashoffset: 0; }
-}
-
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .js .scribble path { stroke-dashoffset: 0; }
-  .card { transition: none; }
   .btn { transition: none; }
 
   /* The observer also short-circuits in JS, but this makes the page correct

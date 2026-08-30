@@ -11,7 +11,6 @@
 // stylesheet already routes every rule through --marker / --hand / --body.
 import { Permanent_Marker, Caveat, Nunito } from "next/font/google";
 import "./globals.css";
-import InkFilters from "@/components/InkFilters";
 
 const marker = Permanent_Marker({
   weight: "400",
@@ -52,50 +51,12 @@ export const metadata = {
   openGraph: {
     type: "website",
     url: "/",
-    siteName: "Bright Labs Vaughan",
     title: "Bright Labs Vaughan",
     description:
       "Student-led science tutoring, workshops and unique experiments for young learners in Vaughan.",
-    // A DESIGNED CARD, not the app icon. The square mark was being letterboxed
-    // into a 1.91:1 slot by every scraper that shows one, which is a logo
-    // floating in grey. og.png is drawn at 1200x630 in the site's own hand.
-    images: [{ url: "/assets/og.png", width: 1200, height: 630, alt: "Bright Labs Vaughan" }],
+    images: ["/assets/brightlabs-mark-512.png"],
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "Bright Labs Vaughan",
-    description:
-      "Student-led science tutoring, workshops and unique experiments for young learners in Vaughan.",
-    images: ["/assets/og.png"],
-  },
-};
-
-/* What a search engine is told, in the one form it actually parses. Every field
- * here is a fact the client supplied — name, area, the two ways to reach them.
- * Nothing is invented to fill the schema out: no opening hours, no price range,
- * no rating. A LocalBusiness with a fabricated aggregateRating is how sites get
- * their rich results pulled. */
-const JSONLD = {
-  "@context": "https://schema.org",
-  "@type": "EducationalOrganization",
-  name: "Bright Labs Vaughan",
-  alternateName: "Bright Labs",
-  url: "https://brightlabsvaughan.com/",
-  logo: "https://brightlabsvaughan.com/assets/brightlabs-mark-512.png",
-  image: "https://brightlabsvaughan.com/assets/og.png",
-  description:
-    "Student-led tutoring and education organization in Vaughan, Ontario, making science exciting, accessible and inspiring for young learners through tutoring, workshops and unique experiments.",
-  email: "brightlabsvaughan@gmail.com",
-  telephone: "+1-647-339-5448",
-  areaServed: { "@type": "City", name: "Vaughan", addressRegion: "ON", addressCountry: "CA" },
-  contactPoint: {
-    "@type": "ContactPoint",
-    contactType: "customer service",
-    email: "brightlabsvaughan@gmail.com",
-    telephone: "+1-647-339-5448",
-    areaServed: "CA",
-    availableLanguage: "English",
-  },
+  twitter: { card: "summary_large_image" },
 };
 
 // Next 15 wants viewport and themeColor out of `metadata` and in their own
@@ -121,12 +82,6 @@ export default function RootLayout({ children }) {
             __html: "document.documentElement.classList.add('js')",
           }}
         />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(JSONLD) }}
-        />
-        <a className="skip" href="#top">Skip to content</a>
-        <InkFilters />
         {children}
       </body>
     </html>
