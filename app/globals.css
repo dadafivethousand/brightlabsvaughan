@@ -33,9 +33,9 @@
   /* THE SHADOW, AND THAT IS THE WHOLE SYSTEM. One hard offset in one dark
      colour, which is what this design was built on: the offset is the second
      pass of a sketch. It was --ink before — the same near-black as the outline,
-     which read as a hole punched in the paper. #43331b is a dark warm brown:
-     still unmistakably a shadow, no longer a void. */
-  --shade: #43331b;
+     which read as a hole punched in the paper. #5c4a30 is a mid warm brown:
+     dark enough to read as a shadow, light enough not to read as a void. */
+  --shade: #5c4a30;
   --rule: rgba(34, 32, 29, 0.055);
 
   --draw: 3px;

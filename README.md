@@ -109,7 +109,7 @@ so the site is too. Three rules hold it together:
    optical weight — matching the numbers would have made them look lighter, not
    equal.
 
-   The shadow colour is `--shade`, a dark warm brown. It used to be `--ink` —
+   The shadow colour is `--shade`, a mid warm brown. It used to be `--ink` —
    the same near-black as the outline — which read as a hole punched in the
    paper rather than as a shadow. That single value is the whole system: one
    hard offset per box, sized to the box.
