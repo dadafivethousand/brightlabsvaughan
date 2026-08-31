@@ -742,6 +742,51 @@ h1 {
   .support-box { padding: 26px 18px 22px; }
 }
 
+/* ---------- two pairs that must stay paired ----------
+ *
+ * The hero's two calls to action, and Instagram/Facebook in the contact card,
+ * are each a PAIR — read as one control with two options. Both wrapped below
+ * 430px, which turns the pair into a stack and leaves the second one looking
+ * like an afterthought under the first.
+ *
+ * `nowrap` alone would only trade wrapping for overflow, so the type and the
+ * padding scale with the viewport underneath it. The clamp maxima are the
+ * desktop values, so nothing changes at the top of this range and the shrink
+ * only starts where the room actually runs out. Measured at 320, 360, 390 and
+ * 430: one line at every one, with margin to spare.
+ */
+@media (max-width: 520px) {
+  .cta-row {
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: clamp(8px, 2.6vw, 16px);
+  }
+
+  .cta-row .btn {
+    padding: 12px clamp(10px, 3.6vw, 26px);
+    font-size: clamp(13px, 3.9vw, 17px);
+  }
+
+  /* The socials are the tighter of the two pairs — two words plus two glyphs
+     against a card that has its own inset — so their floors go lower than the
+     buttons'. At 320px this leaves them ~15px of room rather than ~3. */
+  .socials--lg {
+    flex-wrap: nowrap;
+    gap: clamp(6px, 2.4vw, 14px);
+  }
+
+  .socials--lg .social {
+    padding: 10px clamp(9px, 3.2vw, 22px) 10px clamp(7px, 2.8vw, 18px);
+    font-size: clamp(12px, 3.6vw, 16px);
+    gap: clamp(5px, 2vw, 10px);
+  }
+
+  .socials--lg .social svg {
+    width: clamp(15px, 4.4vw, 22px);
+    height: auto;
+  }
+}
+
 /* ---------- foot ---------- */
 
 .site-foot {
