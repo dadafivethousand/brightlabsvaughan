@@ -686,7 +686,10 @@ h1 {
   font-weight: 800;
   font-size: clamp(14px, 4.2vw, 18px);
   color: var(--ink);
-  background: var(--yellow-soft);
+  /* The full yellow, not --yellow-soft. It was the only yellow object on the
+     site painted in the pale one, so beside the buttons and the icon badges it
+     read as washed out rather than as a quieter variant of anything. */
+  background: var(--yellow);
   border: var(--draw) solid var(--ink);
   border-radius: var(--box);
   padding: 11px clamp(14px, 4.4vw, 22px);
