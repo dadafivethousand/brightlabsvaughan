@@ -95,6 +95,16 @@ so the site is too. Three rules hold it together:
    each other the way a pen's would (`border-radius` with four different pairs),
    and each sits on a hard offset shadow rather than a blur. That offset is the
    second pass of a sketch, not a light source.
+
+   **Buttons are the exception, and it is deliberate.** A panel is a drawing; a
+   button is an object you press, and it gets a real shadow — a tight contact
+   pass plus a wide ambient one, both in `--cast`, which is the paper's own hue
+   darkened rather than the ink. Near-black is what a hole looks like, not a
+   shadow. They also carry a few percent of gradient across the face and a lit
+   lip along the top edge, so the surface reads as raised. Hover lifts and the
+   shadow lengthens; `:active` presses and it collapses to a contact line —
+   which is the way round a real object works, and the opposite of what these
+   did before.
 2. **Nothing sits square.** Cards, notes and the mark are each a degree or two
    off true, alternating direction, so a row reads as pinned up rather than laid
    out on a grid.
