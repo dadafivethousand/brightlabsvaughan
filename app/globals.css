@@ -66,6 +66,16 @@
     0 1px 0 rgba(var(--cast), 0.28),
     0 3px 6px rgba(var(--cast), 0.19),
     0 8px 18px rgba(var(--cast), 0.13);
+
+  /* THE TWO EDGES THAT MAKE A SURFACE A SOLID. A cast shadow says an object is
+     above the page; it says nothing about the object having thickness. These
+     two insets do: a lit lip along the top where the light lands, and a shaded
+     one along the bottom where the face turns away from it. Every box on the
+     site carries them now, which is why a card and a button read as the same
+     material at two sizes rather than as a panel and a widget. */
+  --face-lip:
+    inset 0 2px 0 rgba(255, 255, 255, 0.62),
+    inset 0 -2px 0 rgba(var(--cast), 0.13);
   --rule: rgba(34, 32, 29, 0.055);
 
   --draw: 3px;
@@ -428,10 +438,10 @@ h1 {
    is a number the animation can do arithmetic with. */
 .card {
   rotate: var(--tilt, 0deg);
-  background: var(--paper-2);
+  background: linear-gradient(180deg, #fffdf7 0%, var(--paper-2) 52%, #f6ead2 100%);
   border: var(--draw-panel) solid var(--line);
   border-radius: var(--box);
-  box-shadow: var(--shadow-panel);
+  box-shadow: var(--face-lip), var(--shadow-panel);
   padding: 32px 28px 30px;
 }
 
@@ -446,7 +456,8 @@ h1 {
   display: grid;
   place-items: center;
   color: var(--ink);
-  background: var(--yellow);
+  background: linear-gradient(180deg, #fbcb61 0%, var(--yellow) 56%, #eda92b 100%);
+  box-shadow: var(--face-lip), var(--shadow-rest);
   border: var(--draw) solid var(--ink);
   border-radius: var(--box-alt);
 }
@@ -468,10 +479,10 @@ h1 {
 .band { padding-top: 30px; padding-bottom: 30px; }
 
 .band-inner {
-  background: var(--yellow);
+  background: linear-gradient(180deg, #fac95f 0%, var(--yellow) 54%, #e7a326 100%);
   border: var(--draw-panel) solid var(--line);
   border-radius: var(--box-alt);
-  box-shadow: var(--shadow-panel);
+  box-shadow: var(--face-lip), var(--shadow-panel);
   padding: 54px 48px;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -505,13 +516,13 @@ h1 {
 
 .values li {
   rotate: var(--tilt, 0deg);
-  background: var(--paper);
+  background: linear-gradient(180deg, #ffffff 0%, var(--paper) 52%, #f5eede 100%);
   border: var(--draw-panel) solid var(--line);
   border-radius: var(--box);
   padding: 18px 22px;
   font-size: 16.5px;
   color: var(--ink-soft);
-  box-shadow: var(--shadow-note);
+  box-shadow: var(--face-lip), var(--shadow-note);
 }
 
 .values li:nth-child(even) { --tilt: 0.9deg; }
@@ -549,10 +560,10 @@ h1 {
 .contact { padding-top: 40px; }
 
 .contact-box {
-  background: var(--paper-2);
+  background: linear-gradient(180deg, #fffdf7 0%, var(--paper-2) 52%, #f6ead2 100%);
   border: var(--draw-panel) solid var(--line);
   border-radius: var(--box);
-  box-shadow: var(--shadow-panel);
+  box-shadow: var(--face-lip), var(--shadow-panel);
   padding: 56px 34px 48px;
   text-align: center;
   --tilt: -0.6deg;
@@ -717,10 +728,10 @@ h1 {
 .support-box {
   margin: 30px auto 0;
   max-width: 620px;
-  background: var(--paper);
+  background: linear-gradient(180deg, #ffffff 0%, var(--paper) 52%, #f5eede 100%);
   border: var(--draw-panel) solid var(--line);
   border-radius: var(--box-alt);
-  box-shadow: var(--shadow-note);
+  box-shadow: var(--face-lip), var(--shadow-note);
   padding: 30px 28px 26px;
   text-align: center;
   --tilt: 0.7deg;
@@ -746,11 +757,11 @@ h1 {
   font-weight: 800;
   font-size: clamp(14px, 4.2vw, 18px);
   color: var(--ink);
-  background: var(--yellow-soft);
+  background: linear-gradient(180deg, #fee59a 0%, var(--yellow-soft) 54%, #f4c85c 100%);
   border: var(--draw) solid var(--ink);
   border-radius: var(--box);
   padding: 11px clamp(14px, 4.4vw, 22px);
-  box-shadow: var(--shadow-rest);
+  box-shadow: var(--face-lip), var(--shadow-rest);
   user-select: all;
   white-space: nowrap;
 }

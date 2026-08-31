@@ -109,6 +109,16 @@ so the site is too. Three rules hold it together:
    optical weight — matching the numbers would have made them look lighter, not
    equal.
 
+   **Every box is a lit surface.** A cast shadow says a thing is above the
+   page; it says nothing about the thing having thickness. So each box also
+   carries `--face-lip` — a white inset along the top edge where the light
+   lands, a darkened one along the bottom where the face turns away — over a
+   shallow gradient, a few percent either side of its own base colour. Shallow
+   is the point: a strong ramp across a large surface reads as a glossy web
+   widget rather than a lit sheet of paper. It is the same two edges on a
+   62px icon badge and on the full-width yellow band, which is why they read as
+   one material at two sizes.
+
    **A button is still an object you press**, and it gets a real shadow — a tight contact
    pass plus a wide ambient one, both in `--cast`, which is the paper's own hue
    darkened rather than the ink. Near-black is what a hole looks like, not a
