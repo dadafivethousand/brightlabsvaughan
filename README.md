@@ -119,6 +119,14 @@ so the site is too. Three rules hold it together:
    than as a break. The composed shadow therefore lives in one rule **on the
    boxes**, and each box declares only its own `--depth` and `--edge`.
 
+   The side is each fill taken down to roughly **half** its lightness, hue
+   kept. Two earlier passes were wrong: at 12% down it was invisible, and at
+   25% it was still a lighter tan than the paper around it, so the box looked
+   like it was sitting on a bright ledge rather than casting anything. A face
+   turned away from the only light in the room loses far more than a quarter of
+   its brightness. They are still obviously brown and amber — the near-black
+   the original hard offset used is what made it read as a hole.
+
    Three parts, in order away from the viewer: the lit face, the **side** of
    the object, then the shadow that side casts. The side is the part that makes
    it 3D — a soft cast shadow alone says a flat sheet is hovering. It is offset

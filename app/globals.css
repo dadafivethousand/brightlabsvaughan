@@ -35,7 +35,7 @@
      it is why the hard offset read as a second cut-out rather than as light
      failing to get somewhere. Every value below is this one hue at a different
      strength. */
-  --cast: 74, 52, 14;
+  --cast: 54, 40, 18;
 
   /* Two layers make a shadow look like one. The tight pass is contact — where
      the object meets the page, dark and barely offset — and the wide pass is
@@ -89,16 +89,19 @@
      Three parts, in order away from the viewer: the lit face, the side, the
      shadow the side casts.
      Each box sets --depth and --edge; everything else is shared. */
-  /* The edges. Each is its own fill taken down HARD — a first pass at 12%
-     darker was invisible: a side face only reads as a side if the eye can see
-     it is not the front. These are roughly 25-30% down, about what a matte
-     surface turned away from a single light actually loses, and still
-     unmistakably the same colour rather than a black line. */
-  --edge-cream: #ddcba2;
-  --edge-paper: #ded3ba;
-  --edge-white: #d0c7b3;
-  --edge-yellow: #b8800f;
-  --edge-soft: #cf9a2b;
+  /* The edges: each fill taken down to roughly HALF its lightness, hue kept.
+     Two passes were wrong before this one. At 12% down the side was invisible;
+     at 25% it was still a lighter tan than the paper around it, so the box
+     looked like it was sitting on a bright ledge rather than casting anything.
+     A face turned away from the only light in the room loses far more than a
+     quarter of its brightness — these are the values that read as "unlit", and
+     they are still obviously brown and amber rather than the near-black the
+     original hard offset used. */
+  --edge-cream: #7c6845;
+  --edge-paper: #7f7154;
+  --edge-white: #726b5b;
+  --edge-yellow: #8c5f0b;
+  --edge-soft: #9c761a;
   --rule: rgba(34, 32, 29, 0.055);
 
   --draw: 3px;
@@ -183,8 +186,8 @@ img { max-width: 100%; display: block; }
   box-shadow:
     var(--face-lip),
     calc(var(--depth) * 0.42) var(--depth) 0 var(--edge),
-    calc(var(--depth) * 0.42) calc(var(--depth) + 3px) 8px rgba(var(--cast), 0.28),
-    calc(var(--depth) * 0.5) calc(var(--depth) + 12px) 26px rgba(var(--cast), 0.2);
+    calc(var(--depth) * 0.42) calc(var(--depth) + 3px) 9px rgba(var(--cast), 0.42),
+    calc(var(--depth) * 0.5) calc(var(--depth) + 13px) 28px rgba(var(--cast), 0.3);
 }
 
 /* ---------- wallpaper doodles ---------- */
