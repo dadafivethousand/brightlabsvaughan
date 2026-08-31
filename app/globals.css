@@ -30,78 +30,12 @@
      borrowed from those two is invisible on one of them. */
   --paper-hi: #ffffff;
 
-  /* SHADOWS ARE THE PAPER'S COLOUR, DARKENED — never the ink's. On cream stock
-     a real shadow is a warm brown-grey; near-black is what a hole would be, and
-     it is why the hard offset read as a second cut-out rather than as light
-     failing to get somewhere. Every value below is this one hue at a different
-     strength. */
-  --cast: 54, 40, 18;
-
-  /* Two layers make a shadow look like one. The tight pass is contact — where
-     the object meets the page, dark and barely offset — and the wide pass is
-     ambient, the soft falloff further out. A single blurred shadow is a grey
-     smear; a single hard one is a sticker. */
-  --shadow-rest:
-    0 1px 0 rgba(var(--cast), 0.34),
-    0 3px 5px rgba(var(--cast), 0.24),
-    0 7px 14px rgba(var(--cast), 0.16);
-  --shadow-lift:
-    0 2px 0 rgba(var(--cast), 0.32),
-    0 6px 10px rgba(var(--cast), 0.22),
-    0 14px 26px rgba(var(--cast), 0.18);
-  --shadow-press:
-    0 1px 0 rgba(var(--cast), 0.34),
-    0 1px 2px rgba(var(--cast), 0.22);
-
-  /* Panels get the same two ideas at panel scale — contact, then ambient — with
-     one more pass on the outside, because a bigger object throws light further.
-     A card is heavier than a button and should sit lower on the page; what it
-     should not be is a slab of the same near-black as its own outline. */
-  --shadow-panel:
-    0 1px 0 rgba(var(--cast), 0.26),
-    0 4px 9px rgba(var(--cast), 0.18),
-    0 12px 26px rgba(var(--cast), 0.14),
-    0 26px 54px rgba(var(--cast), 0.10);
-  --shadow-note:
-    0 1px 0 rgba(var(--cast), 0.28),
-    0 3px 6px rgba(var(--cast), 0.19),
-    0 8px 18px rgba(var(--cast), 0.13);
-
-  /* THE TWO EDGES THAT MAKE A SURFACE A SOLID. A cast shadow says an object is
-     above the page; it says nothing about the object having thickness. These
-     two insets do: a lit lip along the top where the light lands, and a shaded
-     one along the bottom where the face turns away from it. Every box on the
-     site carries them now, which is why a card and a button read as the same
-     material at two sizes rather than as a panel and a widget. */
-  --face-lip:
-    inset 0 2px 0 rgba(255, 255, 255, 0.62),
-    inset 0 -2px 0 rgba(var(--cast), 0.13);
-
-  /* ── THE SIDE OF THE BOX ──────────────────────────────────────────────────
-     What was missing was not shadow, it was the OBJECT. A soft cast shadow
-     alone says a flat sheet is floating; what makes something read as a solid
-     is seeing the side of it. The original hard offset was that side — it was
-     just painted in near-black, which is why it read as a hole rather than as
-     the edge of the thing.
-     So it comes back, in the object's OWN colour darkened: the cream cards get
-     a cream edge, the yellow band a deep amber one. Then the real shadow falls
-     underneath THAT, because a solid this thick still has to sit on something.
-     Three parts, in order away from the viewer: the lit face, the side, the
-     shadow the side casts.
-     Each box sets --depth and --edge; everything else is shared. */
-  /* The edges: each fill taken down to roughly HALF its lightness, hue kept.
-     Two passes were wrong before this one. At 12% down the side was invisible;
-     at 25% it was still a lighter tan than the paper around it, so the box
-     looked like it was sitting on a bright ledge rather than casting anything.
-     A face turned away from the only light in the room loses far more than a
-     quarter of its brightness — these are the values that read as "unlit", and
-     they are still obviously brown and amber rather than the near-black the
-     original hard offset used. */
-  --edge-cream: #7c6845;
-  --edge-paper: #7f7154;
-  --edge-white: #726b5b;
-  --edge-yellow: #8c5f0b;
-  --edge-soft: #9c761a;
+  /* THE SHADOW, AND THAT IS THE WHOLE SYSTEM. One hard offset in one dark
+     colour, which is what this design was built on: the offset is the second
+     pass of a sketch. It was --ink before — the same near-black as the outline,
+     which read as a hole punched in the paper. #43331b is a dark warm brown:
+     still unmistakably a shadow, no longer a void. */
+  --shade: #43331b;
   --rule: rgba(34, 32, 29, 0.055);
 
   --draw: 3px;
@@ -150,58 +84,6 @@ body {
 }
 
 img { max-width: 100%; display: block; }
-
-/* ---------- every box is a solid ----------
- *
- * THIS CANNOT BE A TOKEN ON :root, AND THAT IS NOT A STYLE PREFERENCE.
- *
- * A custom property containing `var()` is resolved at computed-value time on
- * the element it is DECLARED on, not on the element that eventually uses it.
- * Declared at `:root`, `var(--depth)` there resolves against `:root` — where no
- * depth is set — so the whole property became guaranteed-invalid, inherited
- * down as invalid, and every `box-shadow: var(--lift3d)` computed to `none`.
- * Every box on the site rendered with no shadow at all and it looked like a
- * subtle change that had not worked, rather than a broken one.
- *
- * Declared HERE, on the boxes themselves, each element resolves its own
- * --depth and --edge and the arithmetic works. Per-element rules set those two
- * values and nothing else; :hover and :active just change --depth, and the
- * shadow recomposes on its own.
- *
- * Three parts, in order away from the viewer: the lit face (the two inset
- * lips), the SIDE of the object, then the shadow that side casts on the page.
- * The side is offset down and slightly right because the light is upper-left —
- * straight down reads as a card with a thick bottom border, and the sideways
- * component is what turns it into a block.
- */
-.btn,
-.social,
-.card,
-.card-icon,
-.band-inner,
-.values li,
-.contact-box,
-.support-box,
-.etransfer {
-  box-shadow:
-    /* the lit face */
-    var(--face-lip),
-    /* the side of the object */
-    calc(var(--depth) * 0.42) var(--depth) 0 var(--edge),
-    /* AND THE PEN AROUND THE SIDE. This layer is the one that was missing, and
-       it is why every earlier attempt looked wrong rather than merely subtle.
-       The front face is drawn with a near-black outline; the side had none, so
-       the box was an inked drawing with an un-inked slab hanging off it — which
-       the eye reads as a smudge behind a sticker, not as the edge of a solid.
-       Same offset as the side, painted BEHIND it with a spread equal to the
-       border width, so an outline appears around the exposed part and joins the
-       face's own outline at the corners: one continuous drawn line around the
-       whole block, which is what the rest of the page is made of. */
-    calc(var(--depth) * 0.42) var(--depth) 0 var(--ol-w, 2.5px) var(--ol-c, var(--line)),
-    /* and the shadow the block casts on the page */
-    calc(var(--depth) * 0.42) calc(var(--depth) + 4px) 9px rgba(var(--cast), 0.4),
-    calc(var(--depth) * 0.5) calc(var(--depth) + 14px) 28px rgba(var(--cast), 0.28);
-}
 
 /* ---------- wallpaper doodles ---------- */
 
@@ -309,16 +191,12 @@ main,
      of the base yellow — enough that the top edge catches light and the bottom
      turns away from it, which is what makes the face read as curved rather than
      as a coloured rectangle with a line round it. */
-  background: linear-gradient(180deg, #fbcb61 0%, var(--yellow) 58%, #eda92b 100%);
+  background: var(--yellow);
   border: var(--draw) solid var(--ink);
   border-radius: var(--box);
   padding: 13px 26px;
   /* The two cast layers, plus two insets that give the face its own thickness:
      a lit lip along the top and a shaded one along the bottom. */
-  --depth: 6px;
-  --edge: var(--edge-yellow);
-  --ol-w: 3px;
-  --ol-c: var(--ink);
   transition:
     transform 0.16s var(--ease-out),
     box-shadow 0.16s var(--ease-out);
@@ -331,6 +209,7 @@ main,
      stay the shape it was drawn as. Anything long enough to need two lines
      should not have been a button. */
   white-space: nowrap;
+  box-shadow: 5px 6px 0 var(--shade);
 }
 
 /* HOVER LIFTS, ACTIVE PRESSES — which is the way round a real object works,
@@ -342,14 +221,9 @@ main,
 /* The side GROWS as it rises and collapses when it is pushed down, which is
    the whole trick: the bottom edge of the shape stays roughly where it was, so
    the button reads as lifting off the page rather than sliding up it. */
-.btn:hover { --depth: 9px; transform: translateY(-3px); }
-
-.btn:active {
-  --depth: 2px;
-  transform: translateY(4px);
-  transition-duration: 0.06s;
-}
-.btn--sm { padding: 9px 18px; font-size: 15px; --depth: 5px; }
+.btn:hover { transform: translate(2px, 3px); box-shadow: 2px 3px 0 var(--shade); }
+.btn:active { transform: translate(4px, 5px); box-shadow: 1px 1px 0 var(--shade); }
+.btn--sm { padding: 9px 18px; font-size: 15px; box-shadow: 4px 4px 0 var(--shade); }
 /* The email is 27 characters and is the one label that cannot be shortened, so
    it scales with the viewport instead of wrapping — `word-break: break-word`
    used to split it as "brightlabsvaughan@g / mail.com", which is a worse thing
@@ -370,10 +244,7 @@ main,
    it flattens that into two things of equal weight. */
 /* The same face, in paper. Its top lip is a plain white highlight rather than
    a tint, because there is no colour underneath for the light to warm. */
-.btn--ghost {
-  background: linear-gradient(180deg, #ffffff 0%, var(--paper-hi) 55%, #f6f1e4 100%);
-  --edge: var(--edge-white);
-}
+.btn--ghost { background: var(--paper-hi); }
 
 /* ---------- hero ---------- */
 
@@ -511,12 +382,11 @@ h1 {
    is a number the animation can do arithmetic with. */
 .card {
   rotate: var(--tilt, 0deg);
-  background: linear-gradient(180deg, #fffdf7 0%, var(--paper-2) 52%, #f6ead2 100%);
+  background: var(--paper-2);
   border: var(--draw-panel) solid var(--line);
   border-radius: var(--box);
-  --depth: 9px;
-  --edge: var(--edge-cream);
   padding: 32px 28px 30px;
+  box-shadow: 7px 8px 0 var(--shade);
 }
 
 /* Alternating, so the row reads as pinned up rather than laid out on a grid. */
@@ -530,13 +400,10 @@ h1 {
   display: grid;
   place-items: center;
   color: var(--ink);
-  background: linear-gradient(180deg, #fbcb61 0%, var(--yellow) 56%, #eda92b 100%);
-  --depth: 5px;
-  --edge: var(--edge-yellow);
-  --ol-w: 3px;
-  --ol-c: var(--ink);
+  background: var(--yellow);
   border: var(--draw) solid var(--ink);
   border-radius: var(--box-alt);
+  box-shadow: 3px 4px 0 var(--shade);
 }
 
 .card-icon svg { width: 34px; height: 34px; }
@@ -556,16 +423,15 @@ h1 {
 .band { padding-top: 30px; padding-bottom: 30px; }
 
 .band-inner {
-  background: linear-gradient(180deg, #fac95f 0%, var(--yellow) 54%, #e7a326 100%);
+  background: var(--yellow);
   border: var(--draw-panel) solid var(--line);
   border-radius: var(--box-alt);
-  --depth: 13px;
-  --edge: var(--edge-yellow);
   padding: 54px 48px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 48px;
   align-items: center;
+  box-shadow: 9px 10px 0 var(--shade);
 }
 
 @media (max-width: 900px) {
@@ -594,14 +460,13 @@ h1 {
 
 .values li {
   rotate: var(--tilt, 0deg);
-  background: linear-gradient(180deg, #ffffff 0%, var(--paper) 52%, #f5eede 100%);
+  background: var(--paper);
   border: var(--draw-panel) solid var(--line);
   border-radius: var(--box);
   padding: 18px 22px;
   font-size: 16.5px;
   color: var(--ink-soft);
-  --depth: 6px;
-  --edge: var(--edge-paper);
+  box-shadow: 5px 5px 0 var(--shade);
 }
 
 .values li:nth-child(even) { --tilt: 0.9deg; }
@@ -639,15 +504,14 @@ h1 {
 .contact { padding-top: 40px; }
 
 .contact-box {
-  background: linear-gradient(180deg, #fffdf7 0%, var(--paper-2) 52%, #f6ead2 100%);
+  background: var(--paper-2);
   border: var(--draw-panel) solid var(--line);
   border-radius: var(--box);
-  --depth: 11px;
-  --edge: var(--edge-cream);
   padding: 56px 34px 48px;
   text-align: center;
   --tilt: -0.6deg;
   rotate: var(--tilt);
+  box-shadow: 9px 10px 0 var(--shade);
 }
 
 .contact-box h2 {
@@ -698,16 +562,12 @@ h1 {
   text-decoration: none;
   color: var(--ink);
   font-weight: 800;
-  background: linear-gradient(180deg, #ffffff 0%, var(--paper) 55%, #f5efe1 100%);
+  background: var(--paper);
   border: var(--draw) solid var(--ink);
   border-radius: var(--box);
   /* Same face and same cast as .btn — these ARE buttons, and left on the hard
      ink offset they were the only thing in the contact card still sitting on a
      black slab while the pair above them had picked up a real shadow. */
-  --depth: 6px;
-  --edge: var(--edge-white);
-  --ol-w: 3px;
-  --ol-c: var(--ink);
   /* The tilt is `rotate:` so hover can own `transform` outright. It used to be
      a transform too, which is why hovering a tilted pill needed four extra
      rules restating the angle for every size and parity — all of them gone. */
@@ -716,6 +576,7 @@ h1 {
     transform 0.16s var(--ease-out),
     box-shadow 0.16s var(--ease-out),
     background 0.16s var(--ease-out);
+  box-shadow: 5px 6px 0 var(--shade);
 }
 
 /* Font Awesome's brand marks are solid paths, not strokes — filling with
@@ -723,16 +584,9 @@ h1 {
 .social svg { fill: currentColor; }
 
 .social:hover {
-  background: linear-gradient(180deg, #fbcb61 0%, var(--yellow) 58%, #eda92b 100%);
-  --edge: var(--edge-yellow);
-  --depth: 9px;
-  transform: translateY(-3px);
-}
-
-.social:active {
-  --depth: 2px;
-  transform: translateY(4px);
-  transition-duration: 0.06s;
+  background: var(--yellow);
+  transform: translate(2px, 3px);
+  box-shadow: 2px 3px 0 var(--shade);
 }
 
 /* The call-to-action pair in the contact card. */
@@ -803,15 +657,14 @@ h1 {
 .support-box {
   margin: 30px auto 0;
   max-width: 620px;
-  background: linear-gradient(180deg, #ffffff 0%, var(--paper) 52%, #f5eede 100%);
+  background: var(--paper);
   border: var(--draw-panel) solid var(--line);
   border-radius: var(--box-alt);
-  --depth: 7px;
-  --edge: var(--edge-paper);
   padding: 30px 28px 26px;
   text-align: center;
   --tilt: 0.7deg;
   rotate: var(--tilt);
+  box-shadow: 6px 7px 0 var(--shade);
 }
 
 .support-box h3 {
@@ -833,16 +686,13 @@ h1 {
   font-weight: 800;
   font-size: clamp(14px, 4.2vw, 18px);
   color: var(--ink);
-  background: linear-gradient(180deg, #fee59a 0%, var(--yellow-soft) 54%, #f4c85c 100%);
+  background: var(--yellow-soft);
   border: var(--draw) solid var(--ink);
   border-radius: var(--box);
   padding: 11px clamp(14px, 4.4vw, 22px);
-  --depth: 5px;
-  --edge: var(--edge-soft);
-  --ol-w: 3px;
-  --ol-c: var(--ink);
   user-select: all;
   white-space: nowrap;
+  box-shadow: 4px 5px 0 var(--shade);
 }
 
 

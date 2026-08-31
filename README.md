@@ -109,58 +109,16 @@ so the site is too. Three rules hold it together:
    optical weight — matching the numbers would have made them look lighter, not
    equal.
 
-   **Every box is a solid, and the composition cannot be a `:root` token.**
-   A custom property containing `var()` resolves at computed-value time on the
-   element it is *declared* on. Declared at `:root`, an inner `var(--depth)`
-   resolves against `:root`, where no depth is set — the whole property becomes
-   guaranteed-invalid, inherits down as invalid, and every `box-shadow` that
-   used it computes to `none`. That shipped once: every box on the site had no
-   shadow whatsoever, and it read as a subtle change that had not landed rather
-   than as a break. The composed shadow therefore lives in one rule **on the
-   boxes**, and each box declares only its own `--depth` and `--edge`.
+   The shadow colour is `--shade`, a dark warm brown. It used to be `--ink` —
+   the same near-black as the outline — which read as a hole punched in the
+   paper rather than as a shadow. That single value is the whole system: one
+   hard offset per box, sized to the box.
 
-   The side is each fill taken down to roughly **half** its lightness, hue
-   kept. Two earlier passes were wrong: at 12% down it was invisible, and at
-   25% it was still a lighter tan than the paper around it, so the box looked
-   like it was sitting on a bright ledge rather than casting anything. A face
-   turned away from the only light in the room loses far more than a quarter of
-   its brightness. They are still obviously brown and amber — the near-black
-   the original hard offset used is what made it read as a hole.
+   An earlier attempt built a layered "3D" shadow out of a lit face, an
+   extruded side, an outline around the side and two soft ambient passes, all
+   composed from custom properties. It was worse at every stage and it is gone.
+   If depth needs adjusting, change `--shade` or an offset — not the structure.
 
-   **The side is drawn with the same pen as the face.** This is the layer that
-   was missing through several attempts that all looked wrong rather than
-   merely subtle: the front face carries a near-black outline and the extruded
-   side carried none, so the box was an inked drawing with an un-inked slab
-   hanging off it — which the eye reads as a smudge behind a sticker, not as
-   the edge of a solid. It is one more `box-shadow` layer at the same offset as
-   the side, painted behind it with a spread equal to the border width, so the
-   outline wraps the exposed part and meets the face's own outline at the
-   corners. One continuous drawn line around the whole block.
-
-   Four parts, in order away from the viewer: the lit face, the **side** of
-   the object, then the shadow that side casts. The side is the part that makes
-   it 3D — a soft cast shadow alone says a flat sheet is hovering. It is offset
-   down and slightly right because the light is upper-left; straight down reads
-   as a card with a thick bottom border.
-
-   **Every box is a lit surface.** A cast shadow says a thing is above the
-   page; it says nothing about the thing having thickness. So each box also
-   carries `--face-lip` — a white inset along the top edge where the light
-   lands, a darkened one along the bottom where the face turns away — over a
-   shallow gradient, a few percent either side of its own base colour. Shallow
-   is the point: a strong ramp across a large surface reads as a glossy web
-   widget rather than a lit sheet of paper. It is the same two edges on a
-   62px icon badge and on the full-width yellow band, which is why they read as
-   one material at two sizes.
-
-   **A button is still an object you press**, and it gets a real shadow — a tight contact
-   pass plus a wide ambient one, both in `--cast`, which is the paper's own hue
-   darkened rather than the ink. Near-black is what a hole looks like, not a
-   shadow. They also carry a few percent of gradient across the face and a lit
-   lip along the top edge, so the surface reads as raised. Hover lifts and the
-   shadow lengthens; `:active` presses and it collapses to a contact line —
-   which is the way round a real object works, and the opposite of what these
-   did before.
 2. **Nothing sits square.** Cards, notes and the mark are each a degree or two
    off true, alternating direction, so a row reads as pinned up rather than laid
    out on a grid.
