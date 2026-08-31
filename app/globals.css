@@ -76,6 +76,29 @@
   --face-lip:
     inset 0 2px 0 rgba(255, 255, 255, 0.62),
     inset 0 -2px 0 rgba(var(--cast), 0.13);
+
+  /* ── THE SIDE OF THE BOX ──────────────────────────────────────────────────
+     What was missing was not shadow, it was the OBJECT. A soft cast shadow
+     alone says a flat sheet is floating; what makes something read as a solid
+     is seeing the side of it. The original hard offset was that side — it was
+     just painted in near-black, which is why it read as a hole rather than as
+     the edge of the thing.
+     So it comes back, in the object's OWN colour darkened: the cream cards get
+     a cream edge, the yellow band a deep amber one. Then the real shadow falls
+     underneath THAT, because a solid this thick still has to sit on something.
+     Three parts, in order away from the viewer: the lit face, the side, the
+     shadow the side casts.
+     Each box sets --depth and --edge; everything else is shared. */
+  /* The edges. Each is its own fill taken down HARD — a first pass at 12%
+     darker was invisible: a side face only reads as a side if the eye can see
+     it is not the front. These are roughly 25-30% down, about what a matte
+     surface turned away from a single light actually loses, and still
+     unmistakably the same colour rather than a black line. */
+  --edge-cream: #ddcba2;
+  --edge-paper: #ded3ba;
+  --edge-white: #d0c7b3;
+  --edge-yellow: #b8800f;
+  --edge-soft: #cf9a2b;
   --rule: rgba(34, 32, 29, 0.055);
 
   --draw: 3px;
@@ -124,6 +147,45 @@ body {
 }
 
 img { max-width: 100%; display: block; }
+
+/* ---------- every box is a solid ----------
+ *
+ * THIS CANNOT BE A TOKEN ON :root, AND THAT IS NOT A STYLE PREFERENCE.
+ *
+ * A custom property containing `var()` is resolved at computed-value time on
+ * the element it is DECLARED on, not on the element that eventually uses it.
+ * Declared at `:root`, `var(--depth)` there resolves against `:root` — where no
+ * depth is set — so the whole property became guaranteed-invalid, inherited
+ * down as invalid, and every `box-shadow: var(--lift3d)` computed to `none`.
+ * Every box on the site rendered with no shadow at all and it looked like a
+ * subtle change that had not worked, rather than a broken one.
+ *
+ * Declared HERE, on the boxes themselves, each element resolves its own
+ * --depth and --edge and the arithmetic works. Per-element rules set those two
+ * values and nothing else; :hover and :active just change --depth, and the
+ * shadow recomposes on its own.
+ *
+ * Three parts, in order away from the viewer: the lit face (the two inset
+ * lips), the SIDE of the object, then the shadow that side casts on the page.
+ * The side is offset down and slightly right because the light is upper-left —
+ * straight down reads as a card with a thick bottom border, and the sideways
+ * component is what turns it into a block.
+ */
+.btn,
+.social,
+.card,
+.card-icon,
+.band-inner,
+.values li,
+.contact-box,
+.support-box,
+.etransfer {
+  box-shadow:
+    var(--face-lip),
+    calc(var(--depth) * 0.42) var(--depth) 0 var(--edge),
+    calc(var(--depth) * 0.42) calc(var(--depth) + 3px) 8px rgba(var(--cast), 0.28),
+    calc(var(--depth) * 0.5) calc(var(--depth) + 12px) 26px rgba(var(--cast), 0.2);
+}
 
 /* ---------- wallpaper doodles ---------- */
 
@@ -237,10 +299,8 @@ main,
   padding: 13px 26px;
   /* The two cast layers, plus two insets that give the face its own thickness:
      a lit lip along the top and a shaded one along the bottom. */
-  box-shadow:
-    inset 0 2px 0 rgba(255, 255, 255, 0.5),
-    inset 0 -2px 0 rgba(var(--cast), 0.2),
-    var(--shadow-rest);
+  --depth: 6px;
+  --edge: var(--edge-yellow);
   transition:
     transform 0.16s var(--ease-out),
     box-shadow 0.16s var(--ease-out);
@@ -261,23 +321,17 @@ main,
    was nothing left for the actual press to do. Now the shadow lengthens and
    softens as it rises, and collapses to a contact line when it is pushed to
    the page. */
-.btn:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    inset 0 2px 0 rgba(255, 255, 255, 0.55),
-    inset 0 -2px 0 rgba(var(--cast), 0.2),
-    var(--shadow-lift);
-}
+/* The side GROWS as it rises and collapses when it is pushed down, which is
+   the whole trick: the bottom edge of the shape stays roughly where it was, so
+   the button reads as lifting off the page rather than sliding up it. */
+.btn:hover { --depth: 9px; transform: translateY(-3px); }
 
 .btn:active {
-  transform: translateY(1px);
-  box-shadow:
-    inset 0 2px 0 rgba(255, 255, 255, 0.35),
-    inset 0 -1px 0 rgba(var(--cast), 0.16),
-    var(--shadow-press);
+  --depth: 2px;
+  transform: translateY(4px);
   transition-duration: 0.06s;
 }
-.btn--sm { padding: 9px 18px; font-size: 15px; }
+.btn--sm { padding: 9px 18px; font-size: 15px; --depth: 5px; }
 /* The email is 27 characters and is the one label that cannot be shortened, so
    it scales with the viewport instead of wrapping — `word-break: break-word`
    used to split it as "brightlabsvaughan@g / mail.com", which is a worse thing
@@ -300,6 +354,7 @@ main,
    a tint, because there is no colour underneath for the light to warm. */
 .btn--ghost {
   background: linear-gradient(180deg, #ffffff 0%, var(--paper-hi) 55%, #f6f1e4 100%);
+  --edge: var(--edge-white);
 }
 
 /* ---------- hero ---------- */
@@ -441,7 +496,8 @@ h1 {
   background: linear-gradient(180deg, #fffdf7 0%, var(--paper-2) 52%, #f6ead2 100%);
   border: var(--draw-panel) solid var(--line);
   border-radius: var(--box);
-  box-shadow: var(--face-lip), var(--shadow-panel);
+  --depth: 9px;
+  --edge: var(--edge-cream);
   padding: 32px 28px 30px;
 }
 
@@ -457,7 +513,8 @@ h1 {
   place-items: center;
   color: var(--ink);
   background: linear-gradient(180deg, #fbcb61 0%, var(--yellow) 56%, #eda92b 100%);
-  box-shadow: var(--face-lip), var(--shadow-rest);
+  --depth: 5px;
+  --edge: var(--edge-yellow);
   border: var(--draw) solid var(--ink);
   border-radius: var(--box-alt);
 }
@@ -482,7 +539,8 @@ h1 {
   background: linear-gradient(180deg, #fac95f 0%, var(--yellow) 54%, #e7a326 100%);
   border: var(--draw-panel) solid var(--line);
   border-radius: var(--box-alt);
-  box-shadow: var(--face-lip), var(--shadow-panel);
+  --depth: 13px;
+  --edge: var(--edge-yellow);
   padding: 54px 48px;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -522,7 +580,8 @@ h1 {
   padding: 18px 22px;
   font-size: 16.5px;
   color: var(--ink-soft);
-  box-shadow: var(--face-lip), var(--shadow-note);
+  --depth: 6px;
+  --edge: var(--edge-paper);
 }
 
 .values li:nth-child(even) { --tilt: 0.9deg; }
@@ -563,7 +622,8 @@ h1 {
   background: linear-gradient(180deg, #fffdf7 0%, var(--paper-2) 52%, #f6ead2 100%);
   border: var(--draw-panel) solid var(--line);
   border-radius: var(--box);
-  box-shadow: var(--face-lip), var(--shadow-panel);
+  --depth: 11px;
+  --edge: var(--edge-cream);
   padding: 56px 34px 48px;
   text-align: center;
   --tilt: -0.6deg;
@@ -624,10 +684,8 @@ h1 {
   /* Same face and same cast as .btn — these ARE buttons, and left on the hard
      ink offset they were the only thing in the contact card still sitting on a
      black slab while the pair above them had picked up a real shadow. */
-  box-shadow:
-    inset 0 2px 0 rgba(255, 255, 255, 0.6),
-    inset 0 -2px 0 rgba(var(--cast), 0.14),
-    var(--shadow-rest);
+  --depth: 6px;
+  --edge: var(--edge-white);
   /* The tilt is `rotate:` so hover can own `transform` outright. It used to be
      a transform too, which is why hovering a tilted pill needed four extra
      rules restating the angle for every size and parity — all of them gone. */
@@ -644,19 +702,14 @@ h1 {
 
 .social:hover {
   background: linear-gradient(180deg, #fbcb61 0%, var(--yellow) 58%, #eda92b 100%);
-  transform: translateY(-2px);
-  box-shadow:
-    inset 0 2px 0 rgba(255, 255, 255, 0.5),
-    inset 0 -2px 0 rgba(var(--cast), 0.2),
-    var(--shadow-lift);
+  --edge: var(--edge-yellow);
+  --depth: 9px;
+  transform: translateY(-3px);
 }
 
 .social:active {
-  transform: translateY(1px);
-  box-shadow:
-    inset 0 2px 0 rgba(255, 255, 255, 0.35),
-    inset 0 -1px 0 rgba(var(--cast), 0.16),
-    var(--shadow-press);
+  --depth: 2px;
+  transform: translateY(4px);
   transition-duration: 0.06s;
 }
 
@@ -731,7 +784,8 @@ h1 {
   background: linear-gradient(180deg, #ffffff 0%, var(--paper) 52%, #f5eede 100%);
   border: var(--draw-panel) solid var(--line);
   border-radius: var(--box-alt);
-  box-shadow: var(--face-lip), var(--shadow-note);
+  --depth: 7px;
+  --edge: var(--edge-paper);
   padding: 30px 28px 26px;
   text-align: center;
   --tilt: 0.7deg;
@@ -761,7 +815,8 @@ h1 {
   border: var(--draw) solid var(--ink);
   border-radius: var(--box);
   padding: 11px clamp(14px, 4.4vw, 22px);
-  box-shadow: var(--face-lip), var(--shadow-rest);
+  --depth: 5px;
+  --edge: var(--edge-soft);
   user-select: all;
   white-space: nowrap;
 }

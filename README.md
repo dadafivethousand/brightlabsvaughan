@@ -109,6 +109,22 @@ so the site is too. Three rules hold it together:
    optical weight — matching the numbers would have made them look lighter, not
    equal.
 
+   **Every box is a solid, and the composition cannot be a `:root` token.**
+   A custom property containing `var()` resolves at computed-value time on the
+   element it is *declared* on. Declared at `:root`, an inner `var(--depth)`
+   resolves against `:root`, where no depth is set — the whole property becomes
+   guaranteed-invalid, inherits down as invalid, and every `box-shadow` that
+   used it computes to `none`. That shipped once: every box on the site had no
+   shadow whatsoever, and it read as a subtle change that had not landed rather
+   than as a break. The composed shadow therefore lives in one rule **on the
+   boxes**, and each box declares only its own `--depth` and `--edge`.
+
+   Three parts, in order away from the viewer: the lit face, the **side** of
+   the object, then the shadow that side casts. The side is the part that makes
+   it 3D — a soft cast shadow alone says a flat sheet is hovering. It is offset
+   down and slightly right because the light is upper-left; straight down reads
+   as a card with a thick bottom border.
+
    **Every box is a lit surface.** A cast shadow says a thing is above the
    page; it says nothing about the thing having thickness. So each box also
    carries `--face-lip` — a white inset along the top edge where the light
