@@ -23,6 +23,11 @@
   --ink-soft: #55504a;
   --paper: #fffcf3;
   --paper-2: #fff7e6;
+  /* A fresh sheet laid on the notebook, and the one surface lighter than both
+     of the papers above. The secondary button needs a fill that reads as solid
+     on the PAGE (--paper) and inside the contact card (--paper-2) — anything
+     borrowed from those two is invisible on one of them. */
+  --paper-hi: #ffffff;
   --rule: rgba(34, 32, 29, 0.055);
 
   --draw: 3px;
@@ -193,7 +198,16 @@ main,
   font-size: clamp(15px, 4.4vw, 20px);
   border-radius: var(--box-alt);
 }
-.btn--ghost { background: transparent; }
+/* NOT TRANSPARENT. A see-through button on a page ruled like graph paper shows
+   the grid running straight through it, so it reads as an outline someone drew
+   round nothing rather than as a thing to press. It keeps the drawn border and
+   the offset shadow — that is what still marks it as the SECONDARY action —
+   but it is a solid surface now, and the rule stops at its edge.
+
+   White rather than a softer yellow on purpose: the full yellow belongs to the
+   one primary call to action on the screen, and a second yellow button beside
+   it flattens that into two things of equal weight. */
+.btn--ghost { background: var(--paper-hi); }
 
 /* ---------- hero ---------- */
 
