@@ -22,8 +22,11 @@ export default function Contact() {
           classroom or group? Send us a note or give us a call.
         </p>
         <div className="contact-actions">
-          <a className="btn btn--lg" href={`mailto:${EMAIL}`}>{EMAIL}</a>
+          {/* Phone first. On a phone-width screen this pair stacks, so DOM order
+              is reading order — and the number is the faster of the two to act
+              on when someone is already holding the device that dials it. */}
           <a className="btn btn--lg btn--ghost" href={`tel:${PHONE_TEL}`}>{PHONE}</a>
+          <a className="btn btn--lg" href={`mailto:${EMAIL}`}>{EMAIL}</a>
         </div>
         {/* Under the email and phone, not beside them. Following on Instagram
             is a different intention from booking a session, and putting the
