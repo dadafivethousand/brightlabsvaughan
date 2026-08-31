@@ -127,7 +127,17 @@ so the site is too. Three rules hold it together:
    its brightness. They are still obviously brown and amber — the near-black
    the original hard offset used is what made it read as a hole.
 
-   Three parts, in order away from the viewer: the lit face, the **side** of
+   **The side is drawn with the same pen as the face.** This is the layer that
+   was missing through several attempts that all looked wrong rather than
+   merely subtle: the front face carries a near-black outline and the extruded
+   side carried none, so the box was an inked drawing with an un-inked slab
+   hanging off it — which the eye reads as a smudge behind a sticker, not as
+   the edge of a solid. It is one more `box-shadow` layer at the same offset as
+   the side, painted behind it with a spread equal to the border width, so the
+   outline wraps the exposed part and meets the face's own outline at the
+   corners. One continuous drawn line around the whole block.
+
+   Four parts, in order away from the viewer: the lit face, the **side** of
    the object, then the shadow that side casts. The side is the part that makes
    it 3D — a soft cast shadow alone says a flat sheet is hovering. It is offset
    down and slightly right because the light is upper-left; straight down reads

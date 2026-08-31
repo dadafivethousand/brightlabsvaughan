@@ -184,10 +184,23 @@ img { max-width: 100%; display: block; }
 .support-box,
 .etransfer {
   box-shadow:
+    /* the lit face */
     var(--face-lip),
+    /* the side of the object */
     calc(var(--depth) * 0.42) var(--depth) 0 var(--edge),
-    calc(var(--depth) * 0.42) calc(var(--depth) + 3px) 9px rgba(var(--cast), 0.42),
-    calc(var(--depth) * 0.5) calc(var(--depth) + 13px) 28px rgba(var(--cast), 0.3);
+    /* AND THE PEN AROUND THE SIDE. This layer is the one that was missing, and
+       it is why every earlier attempt looked wrong rather than merely subtle.
+       The front face is drawn with a near-black outline; the side had none, so
+       the box was an inked drawing with an un-inked slab hanging off it — which
+       the eye reads as a smudge behind a sticker, not as the edge of a solid.
+       Same offset as the side, painted BEHIND it with a spread equal to the
+       border width, so an outline appears around the exposed part and joins the
+       face's own outline at the corners: one continuous drawn line around the
+       whole block, which is what the rest of the page is made of. */
+    calc(var(--depth) * 0.42) var(--depth) 0 var(--ol-w, 2.5px) var(--ol-c, var(--line)),
+    /* and the shadow the block casts on the page */
+    calc(var(--depth) * 0.42) calc(var(--depth) + 4px) 9px rgba(var(--cast), 0.4),
+    calc(var(--depth) * 0.5) calc(var(--depth) + 14px) 28px rgba(var(--cast), 0.28);
 }
 
 /* ---------- wallpaper doodles ---------- */
@@ -304,6 +317,8 @@ main,
      a lit lip along the top and a shaded one along the bottom. */
   --depth: 6px;
   --edge: var(--edge-yellow);
+  --ol-w: 3px;
+  --ol-c: var(--ink);
   transition:
     transform 0.16s var(--ease-out),
     box-shadow 0.16s var(--ease-out);
@@ -518,6 +533,8 @@ h1 {
   background: linear-gradient(180deg, #fbcb61 0%, var(--yellow) 56%, #eda92b 100%);
   --depth: 5px;
   --edge: var(--edge-yellow);
+  --ol-w: 3px;
+  --ol-c: var(--ink);
   border: var(--draw) solid var(--ink);
   border-radius: var(--box-alt);
 }
@@ -689,6 +706,8 @@ h1 {
      black slab while the pair above them had picked up a real shadow. */
   --depth: 6px;
   --edge: var(--edge-white);
+  --ol-w: 3px;
+  --ol-c: var(--ink);
   /* The tilt is `rotate:` so hover can own `transform` outright. It used to be
      a transform too, which is why hovering a tilted pill needed four extra
      rules restating the angle for every size and parity — all of them gone. */
@@ -820,6 +839,8 @@ h1 {
   padding: 11px clamp(14px, 4.4vw, 22px);
   --depth: 5px;
   --edge: var(--edge-soft);
+  --ol-w: 3px;
+  --ol-c: var(--ink);
   user-select: all;
   white-space: nowrap;
 }
