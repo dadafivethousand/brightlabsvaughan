@@ -21,6 +21,7 @@
   --orange: #ee8a3c;
   --ink: #22201d;
   --ink-soft: #55504a;
+  --line: rgba(34, 32, 29, 0.82);
   --paper: #fffcf3;
   --paper-2: #fff7e6;
   /* A fresh sheet laid on the notebook, and the one surface lighter than both
@@ -51,9 +52,31 @@
   --shadow-press:
     0 1px 0 rgba(var(--cast), 0.34),
     0 1px 2px rgba(var(--cast), 0.22);
+
+  /* Panels get the same two ideas at panel scale — contact, then ambient — with
+     one more pass on the outside, because a bigger object throws light further.
+     A card is heavier than a button and should sit lower on the page; what it
+     should not be is a slab of the same near-black as its own outline. */
+  --shadow-panel:
+    0 1px 0 rgba(var(--cast), 0.26),
+    0 4px 9px rgba(var(--cast), 0.18),
+    0 12px 26px rgba(var(--cast), 0.14),
+    0 26px 54px rgba(var(--cast), 0.10);
+  --shadow-note:
+    0 1px 0 rgba(var(--cast), 0.28),
+    0 3px 6px rgba(var(--cast), 0.19),
+    0 8px 18px rgba(var(--cast), 0.13);
   --rule: rgba(34, 32, 29, 0.055);
 
   --draw: 3px;
+  /* THE PEN, AT TWO WEIGHTS. A marker line on absorbent paper is dark but it is
+     not printer's black, and it is not the same weight on a business card as on
+     a poster. Buttons, badges and tags keep --draw/--ink: they are small, and a
+     small object needs the heavier stroke to read at the same optical weight.
+     Panels — cards, the band, the two contact boxes, the value notes — take
+     --draw-panel/--line, half a pixel thinner and slightly translucent so a
+     little paper comes through the stroke. Same drawing, less shouting. */
+  --draw-panel: 2.5px;
   /* The three faces come from `next/font/google` in app/layout.js, which
      self-hosts them and hands each one down as a CSS variable. Nothing else in
      this file changed when the site moved to Next: every rule below already
@@ -406,9 +429,9 @@ h1 {
 .card {
   rotate: var(--tilt, 0deg);
   background: var(--paper-2);
-  border: var(--draw) solid var(--ink);
+  border: var(--draw-panel) solid var(--line);
   border-radius: var(--box);
-  box-shadow: 7px 8px 0 var(--ink);
+  box-shadow: var(--shadow-panel);
   padding: 32px 28px 30px;
 }
 
@@ -446,9 +469,9 @@ h1 {
 
 .band-inner {
   background: var(--yellow);
-  border: var(--draw) solid var(--ink);
+  border: var(--draw-panel) solid var(--line);
   border-radius: var(--box-alt);
-  box-shadow: 9px 10px 0 var(--ink);
+  box-shadow: var(--shadow-panel);
   padding: 54px 48px;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -483,12 +506,12 @@ h1 {
 .values li {
   rotate: var(--tilt, 0deg);
   background: var(--paper);
-  border: var(--draw) solid var(--ink);
+  border: var(--draw-panel) solid var(--line);
   border-radius: var(--box);
   padding: 18px 22px;
   font-size: 16.5px;
   color: var(--ink-soft);
-  box-shadow: 5px 5px 0 var(--ink);
+  box-shadow: var(--shadow-note);
 }
 
 .values li:nth-child(even) { --tilt: 0.9deg; }
@@ -527,9 +550,9 @@ h1 {
 
 .contact-box {
   background: var(--paper-2);
-  border: var(--draw) solid var(--ink);
+  border: var(--draw-panel) solid var(--line);
   border-radius: var(--box);
-  box-shadow: 9px 10px 0 var(--ink);
+  box-shadow: var(--shadow-panel);
   padding: 56px 34px 48px;
   text-align: center;
   --tilt: -0.6deg;
@@ -695,9 +718,9 @@ h1 {
   margin: 30px auto 0;
   max-width: 620px;
   background: var(--paper);
-  border: var(--draw) solid var(--ink);
+  border: var(--draw-panel) solid var(--line);
   border-radius: var(--box-alt);
-  box-shadow: 6px 7px 0 var(--ink);
+  box-shadow: var(--shadow-note);
   padding: 30px 28px 26px;
   text-align: center;
   --tilt: 0.7deg;
@@ -727,7 +750,7 @@ h1 {
   border: var(--draw) solid var(--ink);
   border-radius: var(--box);
   padding: 11px clamp(14px, 4.4vw, 22px);
-  box-shadow: 4px 5px 0 var(--ink);
+  box-shadow: var(--shadow-rest);
   user-select: all;
   white-space: nowrap;
 }

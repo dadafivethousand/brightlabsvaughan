@@ -96,8 +96,20 @@ so the site is too. Three rules hold it together:
    and each sits on a hard offset shadow rather than a blur. That offset is the
    second pass of a sketch, not a light source.
 
-   **Buttons are the exception, and it is deliberate.** A panel is a drawing; a
-   button is an object you press, and it gets a real shadow — a tight contact
+   **Nothing casts the hard offset any more.** Both halves of it were the
+   problem: the shadow was `--ink`, the same near-black as the outline, which
+   is what a hole looks like rather than a shadow — and the outline itself was
+   3px of that same near-black, so a card was a black frame with a black slab
+   behind it. Panels now take `--draw-panel` / `--line`: half a pixel thinner
+   and slightly translucent, so a little paper comes through the stroke. Same
+   drawing, less shouting.
+
+   Buttons, badges and tags keep the full-weight `--draw` / `--ink` line. They
+   are small, and a small object needs the heavier stroke to read at the same
+   optical weight — matching the numbers would have made them look lighter, not
+   equal.
+
+   **A button is still an object you press**, and it gets a real shadow — a tight contact
    pass plus a wide ambient one, both in `--cast`, which is the paper's own hue
    darkened rather than the ink. Near-black is what a hole looks like, not a
    shadow. They also carry a few percent of gradient across the face and a lit
