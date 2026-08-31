@@ -221,34 +221,35 @@ main,
 /* The side GROWS as it rises and collapses when it is pushed down, which is
    the whole trick: the bottom edge of the shape stays roughly where it was, so
    the button reads as lifting off the page rather than sliding up it. */
-/* HOVER LIFTS AND CHANGES COLOUR; ONLY THE CLICK PRESSES.
+/* HOVER PUSHES THE BUTTON INTO THE PAGE.
  *
- * These used to press on hover — down 2px with the shadow shrinking to match.
- * The two movements cancel: the button slides into the space its own shadow was
- * occupying, the silhouette barely changes, and the whole thing was easy to
- * miss. Which is exactly how it read next to the social pills, whose hover
- * changes their fill and is obvious.
+ * The travel and the shadow have to come off by DIFFERENT amounts, which is
+ * the whole reason the first version of this was invisible: it moved down 2px
+ * while the shadow shrank by 3, so the button slid into the space its own
+ * shadow had been occupying and the silhouette barely changed. Here it travels
+ * 3px and 4px while the shadow drops from 5px/6px to 2px/2px — the gap
+ * underneath visibly closes, which is what "pressed" looks like. The brighter
+ * fill carries the rest.
  *
- * So hover now moves the OPPOSITE way — up and back, with the shadow getting
- * longer to match, plus a brighter fill — and the press is saved for :active,
- * where it belongs. Two distinct states instead of one ambiguous one. */
+ * :active takes it the whole way down: no offset left at all, the object flat
+ * on the paper. */
 .btn:hover {
   background: #ffc95a;
-  transform: translate(-1px, -2px);
-  box-shadow: 7px 9px 0 var(--shade);
+  transform: translate(3px, 4px);
+  box-shadow: 2px 2px 0 var(--shade);
 }
 
 .btn:active {
-  transform: translate(3px, 4px);
-  box-shadow: 2px 3px 0 var(--shade);
+  transform: translate(5px, 6px);
+  box-shadow: 0 0 0 var(--shade);
   transition-duration: 0.06s;
 }
 
 /* White has nowhere brighter to go, so the pale yellow does the work. */
 .btn--ghost:hover { background: var(--yellow-soft); }
 
-.btn--lg:hover { box-shadow: 8px 10px 0 var(--shade); }
-.btn--lg:active { box-shadow: 2px 3px 0 var(--shade); }
+.btn--lg:hover { box-shadow: 2px 2px 0 var(--shade); }
+.btn--lg:active { box-shadow: 0 0 0 var(--shade); }
 .btn--sm { padding: 9px 18px; font-size: 15px; box-shadow: 4px 4px 0 var(--shade); }
 /* The email is 27 characters and is the one label that cannot be shortened, so
    it scales with the viewport instead of wrapping — `word-break: break-word`
@@ -609,18 +610,17 @@ h1 {
  * currentColor is what lets one rule tint them on hover along with the text. */
 .social svg { fill: currentColor; }
 
-/* Same two states as .btn, so every pressable thing on the page behaves
-   identically. The fill change was already here and was the only hover on the
-   site anyone could see. */
+/* Same two states as .btn, so every pressable thing on the page goes the same
+   way under the cursor. The fill change was already here. */
 .social:hover {
   background: var(--yellow);
-  transform: translate(-1px, -2px);
-  box-shadow: 7px 9px 0 var(--shade);
+  transform: translate(3px, 4px);
+  box-shadow: 2px 2px 0 var(--shade);
 }
 
 .social:active {
-  transform: translate(3px, 4px);
-  box-shadow: 2px 3px 0 var(--shade);
+  transform: translate(5px, 6px);
+  box-shadow: 0 0 0 var(--shade);
   transition-duration: 0.06s;
 }
 
