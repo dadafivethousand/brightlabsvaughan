@@ -29,7 +29,7 @@ export default function Hero() {
         </p>
         <div className="cta-row" data-reveal="up" style={{ "--d": "350ms" }}>
           <a className="btn" href="#contact">Get in touch</a>
-          <a className="btn btn--ghost" href="#what">See what we do</a>
+          <a className="btn" href="#what">See what we do</a>
         </div>
       </div>
 

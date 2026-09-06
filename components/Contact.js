@@ -25,7 +25,7 @@ export default function Contact() {
           {/* Phone first. On a phone-width screen this pair stacks, so DOM order
               is reading order — and the number is the faster of the two to act
               on when someone is already holding the device that dials it. */}
-          <a className="btn btn--lg btn--ghost" href={`tel:${PHONE_TEL}`}>{PHONE}</a>
+          <a className="btn btn--lg" href={`tel:${PHONE_TEL}`}>{PHONE}</a>
           <a className="btn btn--lg" href={`mailto:${EMAIL}`}>{EMAIL}</a>
         </div>
         {/* Under the email and phone, not beside them. Following on Instagram

@@ -245,8 +245,6 @@ main,
   transition-duration: 0.06s;
 }
 
-/* White has nowhere brighter to go, so the pale yellow does the work. */
-.btn--ghost:hover { background: var(--yellow-soft); }
 
 .btn--lg:hover { box-shadow: 2px 2px 0 var(--shade); }
 .btn--lg:active { box-shadow: 0 0 0 var(--shade); }
@@ -260,18 +258,15 @@ main,
   font-size: clamp(15px, 4.4vw, 20px);
   border-radius: var(--box-alt);
 }
-/* NOT TRANSPARENT. A see-through button on a page ruled like graph paper shows
-   the grid running straight through it, so it reads as an outline someone drew
-   round nothing rather than as a thing to press. It keeps the drawn border and
-   the offset shadow — that is what still marks it as the SECONDARY action —
-   but it is a solid surface now, and the rule stops at its edge.
-
-   White rather than a softer yellow on purpose: the full yellow belongs to the
-   one primary call to action on the screen, and a second yellow button beside
-   it flattens that into two things of equal weight. */
-/* The same face, in paper. Its top lip is a plain white highlight rather than
-   a tint, because there is no colour underneath for the light to warm. */
-.btn--ghost { background: var(--paper-hi); }
+/* ONE BUTTON COLOUR, ON PURPOSE.
+   There used to be a white `--ghost` variant for the secondary action in each
+   pair — the argument being that a second yellow button beside the first
+   flattens them into two things of equal weight. The client's call is that the
+   mix looked inconsistent, and they are right that it read as two different
+   kinds of control rather than as a primary and a secondary one.
+   Every button is the brand yellow now. The pairs still read in order through
+   position and wording rather than colour, and the face, the drawn border and
+   the offset shadow are identical everywhere, which is easier to trust. */
 
 /* ---------- hero ---------- */
 
@@ -920,4 +915,107 @@ h1 {
   }
 
   .js .scribble path { stroke-dashoffset: 0; }
+}
+
+/* ---------- studio credit ---------- */
+
+/* Sits below the footer, outside it. The footer is Bright Labs signing off;
+   this is a different hand, so it gets its own strip of paper and its own
+   quiet weight rather than joining the copyright line. */
+.studio-credit-row {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  padding: 0 28px 44px;
+}
+
+.studio-credit {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  max-width: 100%;
+  /* Wraps rather than overflowing: "Digital Studios" is long and this sits on
+     phones as narrow as 320. */
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 8px 16px;
+  border: var(--draw-panel, 2px) solid rgba(34, 32, 29, 0.20);
+  border-radius: 999px;
+  background: var(--paper-2);
+  font-family: var(--body);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-decoration: none;
+  color: var(--ink-soft);
+  transition: color 0.22s, border-color 0.22s, transform 0.22s, box-shadow 0.22s;
+}
+
+/* The site's own gesture — the offset shadow appears and the thing lifts —
+   rather than a colour change, which is how every other pressable object here
+   behaves. */
+.studio-credit:hover {
+  color: var(--ink);
+  border-color: var(--line);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 rgba(92, 74, 48, 0.5);
+}
+
+.studio-credit:active {
+  transform: translate(0, 0);
+  box-shadow: 0 0 0 rgba(92, 74, 48, 0.5);
+}
+
+.studio-credit__by {
+  font-weight: 600;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  font-size: 11px;
+  opacity: 0.75;
+}
+
+/* 5K'S COLOURS, NOT THIS SITE'S. Identical on every client site — see the
+   component. */
+.studio-credit__mark {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+  width: 14px;
+  height: 14px;
+  flex: none;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.studio-credit:hover .studio-credit__mark { transform: rotate(90deg); }
+
+.studio-credit__mark i {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 1px;
+  background: #6f9bff;
+}
+
+.studio-credit__mark i:nth-child(2) { background: #a78bfa; }
+.studio-credit__mark i:nth-child(3) { background: #4a5165; }
+.studio-credit__mark i:nth-child(4) { background: #22d3ee; }
+
+.studio-credit__name {
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  color: var(--ink);
+}
+
+/* Two-tone wordmark, the quieter half in the studio's own blue rather than in
+   this page's ink — same reasoning as the squares. */
+.studio-credit__name span {
+  color: #5b76b8;
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .studio-credit,
+  .studio-credit__mark { transition: none; }
+  .studio-credit:hover .studio-credit__mark { transform: none; }
 }

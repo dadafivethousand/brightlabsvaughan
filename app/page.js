@@ -6,6 +6,7 @@ import StudentLed from "@/components/StudentLed";
 import About from "@/components/About";
 import Contact from "@/components/Contact";
 import SiteFooter from "@/components/SiteFooter";
+import StudioCredit from "@/components/StudioCredit";
 import Reveal from "@/components/Reveal";
 
 export default function Home() {
@@ -21,6 +22,9 @@ export default function Home() {
         <Contact />
       </main>
       <SiteFooter />
+      {/* Last thing on the page, below the footer rather than inside it — the
+          footer is Bright Labs signing off, and this is a separate hand. */}
+      <StudioCredit />
       <Reveal />
     </>
   );
