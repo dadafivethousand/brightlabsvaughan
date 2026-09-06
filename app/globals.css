@@ -353,6 +353,16 @@ h1 {
 
 /* Light coming off the bulb, thrown on the paper behind it. */
 .glow {
+  /* IT MUST NOT TAKE TAPS. This is a 394px circle and `.hero-art` comes after
+     `.cta-row` in the DOM, so it paints over the bottom edge of both hero
+     buttons — 11% of "Get in touch" and 22% of "See what we do" on a 390px
+     phone. A thumb landing there hit the glow instead of the button and
+     nothing happened, which is exactly what "the buttons don't work" looks
+     like: intermittent, phone-only, and fine the next time because you
+     happened to tap higher. Invisible on a desktop, where the row sits beside
+     the art rather than under it. Decorative and already aria-hidden, so
+     nothing should ever interact with it. */
+  pointer-events: none;
   position: absolute;
   width: 118%;
   aspect-ratio: 1;
