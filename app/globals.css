@@ -191,7 +191,11 @@ main,
      of the base yellow — enough that the top edge catches light and the bottom
      turns away from it, which is what makes the face read as curved rather than
      as a coloured rectangle with a line round it. */
-  background: var(--yellow);
+  /* WHITE, NOT YELLOW. Both buttons in a pair are the same colour now, and
+     white is the one that works for both roles: on a page ruled like graph
+     paper it still reads as a solid object rather than an outline drawn round
+     nothing, and it leaves the yellow to the bulb and the hover. */
+  background: var(--paper-hi);
   border: var(--draw) solid var(--ink);
   border-radius: var(--box);
   padding: 13px 26px;
@@ -234,7 +238,9 @@ main,
  * :active takes it the whole way down: no offset left at all, the object flat
  * on the paper. */
 .btn:hover {
-  background: #ffc95a;
+  /* White has nowhere brighter to go, so the pale yellow does the work — the
+     fill has to change or the press has only the travel to sell it. */
+  background: var(--yellow-soft);
   transform: translate(3px, 4px);
   box-shadow: 2px 2px 0 var(--shade);
 }
@@ -927,7 +933,8 @@ h1 {
   z-index: 1;
   display: flex;
   justify-content: center;
-  padding: 0 28px 44px;
+  /* room for the offset shadow, which sits outside the box */
+  padding: 0 28px 50px;
 }
 
 .studio-credit {
@@ -939,32 +946,45 @@ h1 {
      phones as narrow as 320. */
   flex-wrap: wrap;
   justify-content: center;
-  padding: 8px 16px;
-  border: var(--draw-panel, 2px) solid rgba(34, 32, 29, 0.20);
+  padding: 9px 18px;
+  /* The same drawn face every button here has: pen outline, paper fill, one
+     hard offset shadow. Smaller numbers than `.btn` because the object is
+     smaller — `.btn--sm` sets the precedent — but the same system. */
+  border: var(--draw) solid var(--ink);
   border-radius: 999px;
-  background: var(--paper-2);
+  background: var(--paper-hi);
   font-family: var(--body);
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.6px;
   text-decoration: none;
-  color: var(--ink-soft);
-  transition: color 0.22s, border-color 0.22s, transform 0.22s, box-shadow 0.22s;
+  color: var(--ink);
+  box-shadow: 4px 5px 0 var(--shade);
+  transition:
+    transform 0.16s var(--ease-out),
+    box-shadow 0.16s var(--ease-out),
+    background-color 0.16s var(--ease-out);
 }
 
-/* The site's own gesture — the offset shadow appears and the thing lifts —
-   rather than a colour change, which is how every other pressable object here
-   behaves. */
+/* HOVER PUSHES IT INTO THE PAGE, like every button on this site. It used to
+   lift on hover, which was backwards: pointing at a thing should not look like
+   the thing has already been pressed.
+   The travel and the shadow come off by different amounts on purpose — move
+   down as far as the shadow shrinks and the button just slides into the space
+   its own shadow was occupying, and the silhouette barely changes. Here it
+   travels 2px/3px while the shadow drops from 4px/5px to 2px/2px, so the gap
+   underneath visibly closes. `:active` takes it the whole way down: no offset
+   left, flat on the paper. */
 .studio-credit:hover {
-  color: var(--ink);
-  border-color: var(--line);
-  transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0 rgba(92, 74, 48, 0.5);
+  background: var(--yellow-soft);
+  transform: translate(2px, 3px);
+  box-shadow: 2px 2px 0 var(--shade);
 }
 
 .studio-credit:active {
-  transform: translate(0, 0);
-  box-shadow: 0 0 0 rgba(92, 74, 48, 0.5);
+  transform: translate(4px, 5px);
+  box-shadow: 0 0 0 var(--shade);
+  transition-duration: 0.06s;
 }
 
 .studio-credit__by {
